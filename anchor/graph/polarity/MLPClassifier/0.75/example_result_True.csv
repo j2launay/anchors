@@ -1,0 +1,31 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: positif
+"Anchor: ['but', ',', 'a', 'film', 'far', ""n't"", 'a', 'b""this', '""', ""'s"", 'work', 'terrible', 'from']"
+Precision: 0.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positif
+
+"b""this UNK n't a terrible film by UNK means , but it 's also far from UNK a UNK work . ""
+b""this UNK n't a terrible film UNK any UNK , but it 's UNK far from UNK a realized work UNK
+b""this is n't a terrible film by any UNK , but it 's UNK far from being a UNK work UNK ""
+b""this is n't a terrible film by any means , but UNK 's UNK far from UNK a realized work UN
+b""this is n't a terrible film UNK UNK UNK , but UNK 's also far from being a realized work 
+b""this UNK n't a terrible film UNK any UNK , but it 's UNK far from being a realized work .
+b""this UNK n't a terrible film UNK any means , but it 's also far from being a UNK work . ""
+b""this is n't a terrible film UNK any UNK , but UNK 's UNK far from UNK a realized work . ""
+b""this is n't a terrible film by UNK UNK , but it 's UNK far from being a UNK work . ""
+b""this is n't a terrible film UNK UNK means , but UNK 's also far from being a UNK work . """
+
+Examples where anchor applies and model predicts :negatif
+
+"b""this UNK n't a terrible film UNK UNK means , but it 's UNK far from being a UNK work . ""
+b""this UNK n't a terrible film by any UNK , but UNK 's also far from UNK a realized work UN
+b""this UNK n't a terrible film by any UNK , but it 's UNK far from being a realized work . 
+b""this UNK n't a terrible film UNK any means , but it 's also far from UNK a UNK work UNK ""
+b""this UNK n't a terrible film UNK any UNK , but UNK 's UNK far from UNK a UNK work . ""
+b""this is n't a terrible film by any UNK , but UNK 's UNK far from being a realized work . 
+b""this is n't a terrible film by any means , but it 's UNK far from being a UNK work UNK ""
+b""this UNK n't a terrible film UNK any means , but it 's UNK far from UNK a UNK work UNK ""
+b""this is n't a terrible film UNK UNK UNK , but UNK 's UNK far from being a realized work .
+b""this is n't a terrible film UNK any UNK , but UNK 's UNK far from being a realized work ."

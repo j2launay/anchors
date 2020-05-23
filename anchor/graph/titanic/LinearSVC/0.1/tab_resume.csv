@@ -1,0 +1,2 @@
+black box type,black box train accuracy,black box test accuracy,anchors precision,anchros coverage,anchors prec*coverage,anchors size,time to compute anchors,dataset name,dataset size,dataset nb feature
+LinearSVC,0.676416819012797,0.5362318840579711, decile: 0.8 MDLP: 0.8 quartile: 0.8 entropy: 0.8, decile: 0.39 MDLP: 0.39 quartile: 0.39 entropy: 0.39, decile: 0.31 MDLP: 0.31 quartile: 0.31 entropy: 0.31, decile: 1.0 MDLP: 1.0 quartile: 1.0 entropy: 1.0, decile: 3.66 MDLP: 10.47 quartile: 3.96 entropy: 4.0,titanic,684,7

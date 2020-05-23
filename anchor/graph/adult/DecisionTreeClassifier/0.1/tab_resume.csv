@@ -1,0 +1,2 @@
+black box type,black box train accuracy,black box test accuracy,anchors precision,anchros coverage,anchors prec*coverage,anchors size,time to compute anchors,dataset name,dataset size,dataset nb feature
+DecisionTreeClassifier,0.9352730171383021,0.8330146590184832, decile: 0.81 MDLP: 0.81 quartile: 0.81 entropy: 0.81, decile: 0.28 MDLP: 0.28 quartile: 0.28 entropy: 0.28, decile: 0.22 MDLP: 0.22 quartile: 0.22 entropy: 0.22, decile: 1.0 MDLP: 1.0 quartile: 1.0 entropy: 1.0, decile: 11.96 MDLP: 825.96 quartile: 13.04 entropy: 13.13,adult,15682,12

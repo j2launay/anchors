@@ -1,0 +1,31 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: positif
+"Anchor: ['realized', 'by']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positif
+
+"UNK UNK UNK a terrible UNK by any UNK UNK but it 's UNK far from UNK a realized UNK UNK ""
+UNK UNK n't a terrible UNK by UNK UNK UNK UNK it UNK also far UNK being a realized UNK . 
+UNK UNK n't UNK terrible UNK by UNK means UNK but UNK UNK also UNK UNK being a realized w
+b""this is UNK UNK UNK film by UNK UNK , but it UNK also far from being UNK realized UNK .
+b""this is n't UNK terrible film by any means , but UNK 's UNK UNK UNK UNK UNK realized UN
+b""this UNK UNK a terrible film by UNK UNK UNK but UNK 's UNK far from UNK a realized work
+UNK UNK UNK a terrible film by UNK UNK , UNK UNK 's also far UNK UNK UNK realized UNK . ""
+UNK is UNK UNK terrible UNK by UNK means UNK UNK UNK UNK UNK far from being a realized UN
+UNK is n't a terrible film by UNK UNK UNK but it 's also far from UNK UNK realized UNK . 
+b""this UNK UNK UNK terrible UNK by any UNK , but it 's also far UNK being a realized work"
+
+Examples where anchor applies and model predicts :negatif
+
+"UNK is UNK UNK UNK film by UNK means UNK but UNK 's UNK far from being UNK realized work 
+UNK UNK UNK a terrible UNK by any means , UNK UNK UNK UNK far UNK being a realized UNK . 
+UNK UNK UNK a terrible UNK by UNK means , but it UNK also UNK UNK UNK a realized work UNK
+UNK UNK UNK a terrible UNK by any means , but it 's also UNK from UNK UNK realized UNK UN
+b""this UNK UNK a terrible film by UNK means , UNK it 's UNK far from being UNK realized U
+UNK is UNK a terrible UNK by UNK means , UNK UNK 's also far from UNK a realized work . ""
+b""this UNK UNK UNK terrible film by UNK means , UNK it 's UNK far from being UNK realized
+b""this UNK UNK a UNK UNK by any UNK UNK but it UNK also far UNK being a realized UNK UNK 
+b""this is UNK UNK UNK film by UNK means , but UNK 's also UNK UNK UNK a realized UNK . ""
+UNK is n't UNK UNK film by UNK means , but UNK UNK UNK far UNK being a realized UNK . """

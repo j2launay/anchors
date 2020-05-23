@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LogisticRegression,0.9801624284382905,0.7589841878294202,0.75
+
+anchors precision
+,Use of mask word: ,0.93
+,Replace all words: ,0.93
+""
+anchors coverage
+,Use of mask word: ,0.56
+,Replace all words: ,0.67
+""
+anchors prec*coverage
+,Use of mask word: ,0.52
+,Replace all words: ,0.63
+""
+anchors size
+,Use of mask word: ,2.2
+,Replace all words: ,1.15
+""
+time to compute anchors
+,Use of mask word: ,38.65
+,Replace all words: ,1155.98
+""
+dataset name,dataset size,Number of instances running
+polarity,10433,20

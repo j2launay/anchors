@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy
+MultinomialNB,0.9757981462409887,0.20841187437020606
+
+anchors precision
+,Use of mask word: ,0.98
+,Replace all words: ,0.6
+""
+anchors coverage
+,Use of mask word: ,0.25
+,Replace all words: ,0.65
+""
+anchors prec*coverage
+,Use of mask word: ,0.25
+,Replace all words: ,0.39
+""
+anchors size
+,Use of mask word: ,11.4
+,Replace all words: ,3.2
+""
+time to compute anchors
+,Use of mask word: ,19.52
+,Replace all words: ,218.25
+""
+dataset name,dataset size,Number of instances running
+tweet,485235,5

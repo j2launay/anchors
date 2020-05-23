@@ -1,0 +1,22 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: negatif
+"Anchor: ['work', ',']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :negatif
+
+"b""this UNK UNK UNK terrible UNK UNK any UNK , but it 's also UNK UNK being a UNK work UN
+b""this is n't a UNK film by any UNK , but UNK 's also UNK UNK being UNK realized work . 
+UNK UNK UNK a terrible film by UNK means , UNK UNK 's also far UNK UNK UNK realized work
+b""this UNK UNK a UNK film by any UNK , but UNK UNK also UNK from being a realized work .
+UNK UNK UNK a UNK film by any means , UNK UNK UNK also UNK from UNK UNK UNK work UNK UNK
+b""this UNK n't UNK UNK film UNK any means , UNK it UNK also UNK from UNK UNK UNK work UN
+UNK UNK n't a UNK film by UNK UNK , UNK it 's UNK UNK UNK being UNK UNK work UNK UNK
+b""this is n't a terrible UNK UNK any means , but it UNK UNK UNK UNK being UNK realized w
+UNK is n't UNK UNK UNK by UNK UNK , UNK it UNK UNK UNK UNK UNK a realized work UNK ""
+UNK UNK UNK UNK terrible film UNK any UNK , UNK it 's also far from UNK a realized work "
+
+Examples where anchor applies and model predicts :positif
+
+""

@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+MLPClassifier,0.9755025961922513,0.7628174413033062,0.75
+
+anchors precision
+,Use of mask word: ,0.91
+,Replace all words: ,0.91
+""
+anchors coverage
+,Use of mask word: ,0.51
+,Replace all words: ,0.56
+""
+anchors prec*coverage
+,Use of mask word: ,0.47
+,Replace all words: ,0.51
+""
+anchors size
+,Use of mask word: ,2.05
+,Replace all words: ,2.0
+""
+time to compute anchors
+,Use of mask word: ,53.86
+,Replace all words: ,1221.73
+""
+dataset name,dataset size,Number of instances running
+polarity,10433,20

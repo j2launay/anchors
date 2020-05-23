@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LogisticRegression,0.5175,0.511,0.95
+
+anchors precision
+,decile: ,0.51
+,quartile: ,0.47
+,entropy: ,0.51
+,MDLP: ,0.51
+""
+anchors coverage
+,decile: ,0.28
+,quartile: ,0.29
+,entropy: ,0.33
+,MDLP: ,0.35
+""
+anchors prec*coverage
+,decile: ,0.14
+,quartile: ,0.14
+,entropy: ,0.17
+,MDLP: ,0.18
+""
+anchors size
+,decile: ,1.3
+,quartile: ,1.55
+,entropy: ,1.9
+,MDLP: ,1.8
+""
+time to compute anchors
+,decile: ,3.31
+,quartile: ,1.77
+,entropy: ,3.02
+,MDLP: ,19.05
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+generate_circles,10000,2,20

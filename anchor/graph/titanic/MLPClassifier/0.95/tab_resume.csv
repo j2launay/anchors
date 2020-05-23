@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+MLPClassifier,0.9715142428785607,0.8571428571428571,0.95
+
+anchors precision
+,decile: ,0.99
+,quartile: ,0.99
+,entropy: ,0.98
+,MDLP: ,0.87
+""
+anchors coverage
+,decile: ,0.03
+,quartile: ,0.04
+,entropy: ,0.04
+,MDLP: ,0.15
+""
+anchors prec*coverage
+,decile: ,0.03
+,quartile: ,0.04
+,entropy: ,0.04
+,MDLP: ,0.13
+""
+anchors size
+,decile: ,4.72
+,quartile: ,3.52
+,entropy: ,3.52
+,MDLP: ,2.58
+""
+time to compute anchors
+,decile: ,10.47
+,quartile: ,8.42
+,entropy: ,11.29
+,MDLP: ,7.13
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+titanic,834,6,50

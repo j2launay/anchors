@@ -1,0 +1,40 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LinearSVC,0.9852530888800319,0.8540471637985978,0.75
+
+anchors precision
+,kmeans: ,0.92
+,decile: ,0.89
+,quartile: ,0.88
+,entropy: ,0.89
+,MDLP: ,0.89
+""
+anchors coverage
+,kmeans: ,0.03
+,decile: ,0.03
+,quartile: ,0.04
+,entropy: ,0.04
+,MDLP: ,0.04
+""
+anchors prec*coverage
+,kmeans: ,0.03
+,decile: ,0.03
+,quartile: ,0.03
+,entropy: ,0.03
+,MDLP: ,0.04
+""
+anchors size
+,kmeans: ,3.16
+,decile: ,2.52
+,quartile: ,3.0
+,entropy: ,2.42
+,MDLP: ,3.66
+""
+time to compute anchors
+,kmeans: ,34.03
+,decile: ,31.4
+,quartile: ,21.65
+,entropy: ,29.32
+,MDLP: ,44.4
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+adult,15682,12,50

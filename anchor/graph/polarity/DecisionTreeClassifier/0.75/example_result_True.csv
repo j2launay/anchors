@@ -1,0 +1,22 @@
+"text: b""i didn't laugh . i didn't smile . i survived ."""
+Prediction: negatif
+"Anchor: ['laugh', 'i']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :negatif
+
+"UNK did n't laugh UNK i UNK UNK smile . UNK UNK UNK UNK
+b""i UNK n't laugh . i UNK n't smile . UNK UNK UNK UNK
+UNK did UNK laugh . i did n't smile UNK i survived . ""
+b""i UNK n't laugh UNK i UNK n't smile . i UNK . ""
+UNK did n't laugh . i did UNK smile . i survived . ""
+UNK did n't laugh UNK i did UNK smile UNK i UNK . ""
+b""i did n't laugh . i did UNK smile UNK UNK survived . U
+UNK did n't laugh . i UNK n't UNK UNK i survived . UNK
+UNK did UNK laugh UNK i UNK n't smile UNK UNK UNK . UNK
+b""i did UNK laugh UNK i did UNK smile . UNK survived . U"
+
+Examples where anchor applies and model predicts :positif
+
+""

@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+tuner,0.85,0.8,0.1
+
+anchors precision
+,Use of mask word: ,0.01
+,Replace all words: ,0.01
+""
+anchors coverage
+,Use of mask word: ,0.15
+,Replace all words: ,0.12
+""
+anchors prec*coverage
+,Use of mask word: ,0.0
+,Replace all words: ,0.0
+""
+anchors size
+,Use of mask word: ,4.6
+,Replace all words: ,4.3
+""
+time to compute anchors
+,Use of mask word: ,802.64
+,Replace all words: ,1866.37
+""
+dataset name,dataset size,Number of instances running
+bert,60,10

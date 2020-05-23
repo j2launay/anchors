@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy
+RandomForestClassifier,0.6925849639546859,0.1684009493205985
+
+anchors precision
+,Use of mask word: ,0.99
+,Replace all words: ,0.97
+""
+anchors coverage
+,Use of mask word: ,0.35
+,Replace all words: ,0.45
+""
+anchors prec*coverage
+,Use of mask word: ,0.35
+,Replace all words: ,0.43
+""
+anchors size
+,Use of mask word: ,3.4
+,Replace all words: ,6.0
+""
+time to compute anchors
+,Use of mask word: ,96.98
+,Replace all words: ,271.32
+""
+dataset name,dataset size,Number of instances running
+tweet,485235,5

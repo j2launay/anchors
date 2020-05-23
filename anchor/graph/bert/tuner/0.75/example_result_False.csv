@@ -1,0 +1,22 @@
+"text: if this holiday movie is supposed to be a gift , somebody unwrapped it early , took out all the good stuff , and left behind the crap lrb literally rrb"
+Prediction: negative
+"Anchor: ['a', 'lrb']"
+Precision: 0.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :negative
+
+"if those catering poster is bothered to be a giftcard , somebody flipped it there , were out all an wonderful fun , and arrived long the horseshit lrb ultimately rrb"
+
+Examples where anchor applies and model predicts :positive
+
+"if an dinner comedy is been to be a raffle , somebody exchanged it apparently , took out all another nice bullshit , and happened immediately this lot lrb invariably rrb
+if this month soundtrack is done to be a birthday , somebody sneaked it almost , stepped out all the interesting anyone , and looked close the shame lrb then rrb
+if every village filmmaking is figured to be a box , somebody plopped it latter , moved out all the difficult stuff , and landed already both waste lrb somehow rrb
+if these summertime tale is assumed to be a toy , somebody hugged it next , ran out all that perfect thing , and ran suddenly this clue lrb definitely rrb
+if that dinner trailer is mentioned to be a birthday , somebody smiled it last , stepped out all some valuable bullshit , and decided outside the vid lrb figuratively rrb
+if any booking film is gotten to be a joy , somebody hugged it early , gave out all every great hope , and got together both joke lrb quite rrb
+if some catering tv is bothered to be a celebration , somebody plopped it so , did out all an obvious nothing , and flew basically some rubbish lrb away rrb
+if this spa premiere is heard to be a store , somebody hugged it quite , began out all the many wonder , and stopped underneath another stuff lrb indeed rrb
+if this vacation pic is kept to be a beauty , somebody flipped it later , moved out all those reliable lot , and disappeared outside all bullshit lrb finally rrb
+if another catering adventure is done to be a wedding , somebody sighed it later , worked out all each impressed guy , and took close those pile lrb basically rrb"

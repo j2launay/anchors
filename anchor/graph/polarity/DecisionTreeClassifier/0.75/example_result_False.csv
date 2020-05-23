@@ -1,0 +1,31 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: negatif
+"Anchor: [""'s"", 'being']"
+Precision: 1.0
+Coverage: 1.0
+
+Examples where anchor applies and model predicts :negatif
+
+"b""this is n't the dreadful narrator by an ones , but it 's quite down via being another realized change . ""
+b""this is n't another terrible tale with that people , but it 's necessarily indeed than being this confronted r
+b""this is n't this decent adaption by the ways , but it 's sometimes rather alongside being any kept attention .
+b""this is n't another nasty cinematography alongside that needs , but it 's really enough onto being any confron
+b""this is n't another scared actress by all ones , but it 's n't maybe past being an supposed job . ""
+b""this is n't this dreadful film by both things , but it 's really yet for being every pushed labor . ""
+b""this is n't any brutal flick before some ways , but it 's likely obviously behind being that dreamed practice 
+b""this is n't this unbearable screenplay by this ones , but it 's probably here for being any avoided lot . ""
+b""this is n't every uncomfortable clip through any ways , but it 's eventually actually as being an intrigued co
+b""this is n't any pathetic clip by both ones , but it 's primarily apparently between being the lost labor . """
+
+Examples where anchor applies and model predicts :positif
+
+"b""this is n't any lousy actress with all people , but it 's highly much for being that noticed hope . ""
+b""this is n't that horrible screenplay with some things , but it 's especially frankly onto being any mentioned 
+b""this is n't every dismal horror with the needs , but it 's surely relatively into being every remembered mind 
+b""this is n't the mediocre thriller into all needs , but it 's sometimes indeed from being every meant lack . ""
+b""this is n't that unpleasant fiction without every permits , but it 's still probably at being another cared so
+b""this is n't another bad portrayal by those permits , but it 's primarily enough over being both begun work . ""
+b""this is n't each bad screenwriter upon those needs , but it 's certainly hopefully past being another realized
+b""this is n't both absurd episode by every permits , but it 's especially fairly like being that witnessed resea
+b""this is n't every odd cult while those things , but it 's there alone for being the done stuff . ""
+b""this is n't another obvious narration for these ones , but it 's therefore nowhere below being each sucked job"

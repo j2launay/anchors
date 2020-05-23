@@ -1,0 +1,2 @@
+black box type,black box train accuracy,black box test accuracy,anchors precision,anchros coverage,anchors prec*coverage,anchors size,time to compute anchors,dataset name,dataset size,dataset nb feature
+RandomForestClassifier,0.9981718464351006,0.8985507246376812, decile: 0.83 MDLP: 0.83 quartile: 0.83 entropy: 0.83, decile: 0.41 MDLP: 0.41 quartile: 0.41 entropy: 0.41, decile: 0.34 MDLP: 0.34 quartile: 0.34 entropy: 0.34, decile: 1.0 MDLP: 1.0 quartile: 1.0 entropy: 1.0, decile: 139.38 MDLP: 146.21 quartile: 139.42 entropy: 139.24,titanic,684,7

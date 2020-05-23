@@ -1,0 +1,13 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: positif
+Anchor: []
+Precision: 1.0
+Coverage: 1
+
+Examples where anchor applies and model predicts :positif
+
+""
+
+Examples where anchor applies and model predicts :negatif
+
+""

@@ -1,0 +1,2 @@
+black box type,black box train accuracy,black box test accuracy,anchors precision,anchros coverage,anchors prec*coverage,anchors size,time to compute anchors,dataset name,dataset size,dataset nb feature
+LogisticRegression,0.7842778793418648,0.7681159420289855, decile: 0.99 MDLP: 0.99 quartile: 0.99 entropy: 0.99, decile: 0.5 MDLP: 0.5 quartile: 0.5 entropy: 0.5, decile: 0.5 MDLP: 0.5 quartile: 0.5 entropy: 0.5, decile: 1.0 MDLP: 1.0 quartile: 1.0 entropy: 1.0, decile: 4.06 MDLP: 11.82 quartile: 3.88 entropy: 3.91,titanic,684,7

@@ -1,0 +1,31 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: positif
+"Anchor: ['terrible', ',', 'a', ""'s"", 'realized', 'from', '""']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positif
+
+"UNK UNK UNK a terrible film by any means , UNK it 's also UNK from UNK a realized work . ""
+UNK UNK UNK UNK terrible film by UNK means , UNK UNK 's UNK UNK from UNK a realized UNK . ""
+b""this is n't a terrible film by any means , UNK it 's UNK UNK from UNK a realized work UNK ""
+b""this is n't UNK terrible film by any means , UNK UNK 's also far from being a realized UNK 
+UNK is UNK UNK terrible film UNK any UNK , UNK UNK 's UNK far from being a realized work . ""
+b""this UNK n't UNK terrible UNK by UNK UNK , UNK UNK 's UNK UNK from being a realized work UN
+UNK UNK n't UNK terrible UNK by any UNK , but UNK 's UNK far from UNK a realized UNK UNK ""
+UNK UNK n't a terrible UNK by any means , but it 's UNK UNK from UNK a realized UNK . ""
+b""this is UNK a terrible film by any UNK , but it 's also UNK from being a realized work UNK 
+UNK is n't a terrible film UNK any means , UNK UNK 's UNK UNK from being a realized work UNK "
+
+Examples where anchor applies and model predicts :negatif
+
+"UNK UNK UNK a terrible film by any UNK , UNK UNK 's UNK UNK from UNK a realized work . ""
+b""this UNK n't UNK terrible film UNK any means , but UNK 's UNK UNK from being a realized UNK
+UNK is n't a terrible film by UNK means , but UNK 's also far from being a realized UNK UNK ""
+b""this is UNK a terrible film by any UNK , UNK UNK 's also UNK from UNK a realized work UNK ""
+UNK UNK UNK UNK terrible UNK by any means , UNK it 's also far from UNK a realized work . ""
+b""this UNK n't a terrible film UNK any means , but UNK 's UNK far from being a realized work 
+UNK is n't a terrible UNK by any UNK , but it 's UNK UNK from UNK a realized UNK . ""
+b""this UNK UNK UNK terrible UNK UNK any UNK , but UNK 's UNK UNK from being a realized UNK . 
+b""this is n't a terrible UNK UNK UNK UNK , UNK it 's also UNK from UNK a realized work UNK ""
+b""this is n't UNK terrible UNK by UNK means , UNK it 's also UNK from UNK a realized work . """

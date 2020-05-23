@@ -1,0 +1,31 @@
+"text: b""this isn't a terrible film by any means , but it's also far from being a realized work ."""
+Prediction: negatif
+"Anchor: [""'s"", 'it', 'b""this', '""', 'but', 'is']"
+Precision: 1.0
+Coverage: 1.0
+
+Examples where anchor applies and model predicts :negatif
+
+"b""this is n't each abysmal filmmaking upon all circumstances , but it 's alone already from being the figure
+b""this is n't some bad melodrama over both ways , but it 's simply n't past being this disappointed attentio
+b""this is n't an bad screenwriter from any terms , but it 's clearly away from being another meant future . 
+b""this is n't another scary movie alongside some ways , but it 's also once upon being that realized process
+b""this is n't another disgusting filmmaking to some purposes , but it 's also possibly while being another s
+b""this is n't any disgusting opening by all things , but it 's surely almost against being some ignored exam
+b""this is n't any embarrassing movie for every circumstances , but it 's generally actually of being an hear
+b""this is n't another difficult scene because all matters , but it 's later once against being the done focu
+b""this is n't an laughable animator by an circumstances , but it 's equally far into being an supposed work 
+b""this is n't another terrifying narrative by both things , but it 's finally however than being this enjoye"
+
+Examples where anchor applies and model predicts :positif
+
+"b""this is n't the afraid horror under an permits , but it 's probably n't between being an picked planning .
+b""this is n't another dreadful movie since those reasons , but it 's necessarily just within being some drag
+b""this is n't another unbelievable thriller by those needs , but it 's certainly somewhat across being that 
+b""this is n't the horrifying narrator past some people , but it 's primarily too under being that asked expe
+b""this is n't every pathetic crime by an needs , but it 's hardly hopefully without being each made progress
+b""this is n't any sick parody at every people , but it 's initially quite about being another ended task . ""
+b""this is n't this shitty film because any people , but it 's much certainly in being another grasped use . 
+b""this is n't another heinous prequel by this needs , but it 's directly already between being this disappoi
+b""this is n't some horrid tale by both people , but it 's especially nowhere to being another invested appro
+b""this is n't another damned comedy before another needs , but it 's especially somewhat from being each sup"

@@ -1,0 +1,22 @@
+"text: if this holiday movie is supposed to be a gift , somebody unwrapped it early , took out all the good stuff , and left behind the crap lrb literally rrb"
+Prediction: negative
+"Anchor: ['is', 'stuff', ',', ',', 'good']"
+Precision: 0.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :negative
+
+"UNK UNK UNK UNK is UNK to be a gift , somebody UNK UNK early UNK took out UNK the good stuff , UNK UNK UNK the UNK lrb UNK UNK"
+
+Examples where anchor applies and model predicts :positive
+
+"if this UNK UNK is supposed to UNK a gift , UNK unwrapped UNK early , UNK UNK UNK UNK good stuff , and left UNK the crap lrb literally rrb
+if UNK UNK UNK is UNK to UNK a gift , UNK UNK it early UNK UNK out UNK the good stuff , UNK UNK behind UNK UNK UNK literally rrb
+if UNK UNK UNK is supposed UNK UNK a gift , UNK UNK it early , UNK out all UNK good stuff , UNK UNK UNK UNK crap UNK literally UNK
+UNK UNK UNK UNK is supposed UNK be UNK UNK , somebody UNK it UNK , took out all the good stuff , UNK left behind the crap lrb UNK UNK
+UNK this holiday movie is supposed to be a UNK , UNK unwrapped it UNK UNK took out UNK UNK good stuff , and UNK behind the crap UNK UNK UNK
+UNK UNK holiday UNK is UNK UNK be UNK UNK , somebody UNK it UNK UNK UNK out UNK UNK good stuff , UNK left UNK the crap UNK UNK rrb
+UNK this holiday UNK is UNK UNK UNK UNK gift , UNK UNK it early , UNK out UNK the good stuff , UNK left behind UNK crap lrb literally rrb
+if UNK UNK movie is UNK to UNK a UNK , somebody UNK UNK UNK UNK UNK UNK UNK UNK good stuff , and left behind UNK UNK lrb UNK rrb
+UNK UNK UNK UNK is UNK to be a UNK , somebody UNK UNK UNK UNK took UNK UNK UNK good stuff , UNK UNK UNK UNK crap UNK UNK rrb
+if UNK holiday UNK is UNK to be UNK gift , UNK UNK it UNK UNK took out all UNK good stuff , and left UNK the crap lrb literally UNK"

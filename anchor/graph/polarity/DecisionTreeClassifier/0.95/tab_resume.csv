@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy
+DecisionTreeClassifier,1.0,0.6209870627695256
+
+anchors precision
+,Use of mask word: ,0.99
+,Replace all words: ,0.9
+""
+anchors coverage
+,Use of mask word: ,0.48
+,Replace all words: ,0.58
+""
+anchors prec*coverage
+,Use of mask word: ,0.48
+,Replace all words: ,0.52
+""
+anchors size
+,Use of mask word: ,4.7
+,Replace all words: ,2.3
+""
+time to compute anchors
+,Use of mask word: ,69.12
+,Replace all words: ,1218.41
+""
+dataset name,dataset size,Number of instances running
+polarity,10433,20

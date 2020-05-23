@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LinearSVC,0.884,0.883,0.95
+
+anchors precision
+,decile: ,0.75
+,quartile: ,0.74
+,entropy: ,0.84
+,MDLP: ,0.94
+""
+anchors coverage
+,decile: ,0.29
+,quartile: ,0.28
+,entropy: ,0.29
+,MDLP: ,0.26
+""
+anchors prec*coverage
+,decile: ,0.22
+,quartile: ,0.2
+,entropy: ,0.24
+,MDLP: ,0.24
+""
+anchors size
+,decile: ,1.25
+,quartile: ,1.6
+,entropy: ,1.25
+,MDLP: ,1.25
+""
+time to compute anchors
+,decile: ,3.46
+,quartile: ,1.69
+,entropy: ,2.93
+,MDLP: ,14.43
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+generate_moons,10000,2,20

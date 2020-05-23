@@ -1,0 +1,40 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+DecisionTreeClassifier,1.0,0.998,0.75
+
+anchors precision
+,kmeans: ,0.95
+,decile: ,0.95
+,quartile: ,0.9
+,entropy: ,0.96
+,MDLP: ,0.95
+""
+anchors coverage
+,kmeans: ,0.26
+,decile: ,0.23
+,quartile: ,0.3
+,entropy: ,0.25
+,MDLP: ,0.26
+""
+anchors prec*coverage
+,kmeans: ,0.24
+,decile: ,0.22
+,quartile: ,0.27
+,entropy: ,0.24
+,MDLP: ,0.25
+""
+anchors size
+,kmeans: ,1.06
+,decile: ,1.06
+,quartile: ,1.12
+,entropy: ,1.06
+,MDLP: ,1.06
+""
+time to compute anchors
+,kmeans: ,11.32
+,decile: ,10.47
+,quartile: ,5.12
+,entropy: ,9.29
+,MDLP: ,10.68
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+generate_moons,10000,2,50

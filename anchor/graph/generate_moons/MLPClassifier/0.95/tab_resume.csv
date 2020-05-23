@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+MLPClassifier,0.982125,0.986,0.95
+
+anchors precision
+,decile: ,0.75
+,quartile: ,0.34
+,entropy: ,0.69
+,MDLP: ,0.44
+""
+anchors coverage
+,decile: ,0.16
+,quartile: ,0.22
+,entropy: ,0.23
+,MDLP: ,0.16
+""
+anchors prec*coverage
+,decile: ,0.12
+,quartile: ,0.07
+,entropy: ,0.16
+,MDLP: ,0.07
+""
+anchors size
+,decile: ,1.55
+,quartile: ,2.2
+,entropy: ,1.65
+,MDLP: ,1.85
+""
+time to compute anchors
+,decile: ,3.69
+,quartile: ,2.05
+,entropy: ,3.8
+,MDLP: ,20.14
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+generate_moons,10000,2,20

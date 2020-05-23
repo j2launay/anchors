@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy
+LinearSVC,0.9994850669412977,0.19430035196040496
+
+anchors precision
+,Use of mask word: ,0.97
+,Replace all words: ,0.79
+""
+anchors coverage
+,Use of mask word: ,0.45
+,Replace all words: ,0.43
+""
+anchors prec*coverage
+,Use of mask word: ,0.43
+,Replace all words: ,0.34
+""
+anchors size
+,Use of mask word: ,4.2
+,Replace all words: ,8.4
+""
+time to compute anchors
+,Use of mask word: ,8.7
+,Replace all words: ,215.12
+""
+dataset name,dataset size,Number of instances running
+tweet,485235,5

@@ -1,0 +1,25 @@
+black box type,black box train accuracy,black box test accuracy
+MLPClassifier,0.9897013388259527,0.22576159803680168
+
+anchors precision
+,Use of mask word: ,1.0
+,Replace all words: ,0.71
+""
+anchors coverage
+,Use of mask word: ,0.85
+,Replace all words: ,0.43
+""
+anchors prec*coverage
+,Use of mask word: ,0.85
+,Replace all words: ,0.31
+""
+anchors size
+,Use of mask word: ,0.4
+,Replace all words: ,3.4
+""
+time to compute anchors
+,Use of mask word: ,1.53
+,Replace all words: ,214.65
+""
+dataset name,dataset size,Number of instances running
+tweet,485235,5

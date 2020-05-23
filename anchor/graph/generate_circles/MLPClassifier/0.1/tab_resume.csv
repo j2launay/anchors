@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy
+MLPClassifier,0.976875,0.974
+
+anchors precision
+,decile: ,0.66
+,quartile: ,0.55
+,entropy: ,0.67
+,MDLP: ,0.67
+""
+anchors coverage
+,decile: ,0.47
+,quartile: ,0.52
+,entropy: ,0.63
+,MDLP: ,0.55
+""
+anchors prec*coverage
+,decile: ,0.31
+,quartile: ,0.29
+,entropy: ,0.43
+,MDLP: ,0.37
+""
+anchors size
+,decile: ,1.0
+,quartile: ,1.0
+,entropy: ,1.0
+,MDLP: ,1.0
+""
+time to compute anchors
+,decile: ,23.67
+,quartile: ,11.31
+,entropy: ,19.66
+,MDLP: ,141.65
+""
+dataset name,dataset size,dataset nb feature,Number of instances running
+generate_circles,10000,2,50
