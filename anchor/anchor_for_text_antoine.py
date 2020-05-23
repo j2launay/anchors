@@ -100,7 +100,7 @@ def get_proba(texts):
     return res
             
     
-nlp = spacy.load('/udd/jdelauna/Documents/anchor/datasets/en_core_web_lg-2.2.5/en_core_web_lg/en_core_web_lg-2.2.5')
+nlp = spacy.load('/home/julien/Documents/stage/anchor/datasets/en_core_web_lg-2.2.5/en_core_web_lg/en_core_web_lg-2.2.5')
 #nlp = spacy.load('/udd/jdelauna/Documents/anchor/datasets/fr_core_news_sm-2.2.5/fr_core_news_sm/fr_core_news_sm-2.2.5')
 
 explainer = anchor_text.AnchorText(nlp, ['true news', 'fake news'], use_unk_distribution=True)
@@ -131,17 +131,3 @@ print()
 print('Examples where anchor applies and model predicts %s:' % alternative)
 print()
 print('\n'.join([x[0] for x in exp.examples(only_different_prediction=True)]))
-
-
-
-print('Partial anchor: %s' % (' AND '.join(exp.names(0))))
-print('Precision: %.2f' % exp.precision(0))
-print()
-print('Examples where anchor applies and model predicts %s:' % pred)
-print()
-print('\n'.join([x[0] for x in exp.examples(partial_index=0, only_same_prediction=True)]))
-print()
-print('Examples where anchor applies and model predicts %s:' % alternative)
-print()
-print('\n'.join([x[0] for x in exp.examples(partial_index=0, only_different_prediction=True)]))
-#"""
