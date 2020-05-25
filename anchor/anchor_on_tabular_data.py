@@ -60,7 +60,7 @@ threshold=0.75
 if experiment :
     models=[tree.DecisionTreeClassifier(), MLPClassifier(alpha=1, max_iter=100), LinearSVC(random_state=0, tol=1e-5), sklearn.linear_model.LogisticRegression(), 
                     sklearn.ensemble.RandomForestClassifier(n_estimators=30, n_jobs=5)]
-    #models=[tree.DecisionTreeClassifier()]
+    models=[tree.DecisionTreeClassifier()]
     time_experiment = 50
     x = ['kmeans', 'decile', 'quartile', 'entropy', 'MDLP']
 
@@ -169,7 +169,7 @@ if experiment :
         print("bins :", model_size_discretization)
         print("nb feature :", feature_discretize)
         for i in range(len(mean_model_coverage)):
-            mean_model_coverage_precision.append(mean_model_coverage[i]*mean_model_precision[i])
+            mean_model_coverage_precision.append(2/(1/mean_model_coverage[i]+1/mean_model_precision[i]))
 
         graph_coverage = baseGraph.BaseGraph(title="Results of discretization methods for coverage", y_label="coverage", 
                             model=bb_model, accuracy=sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)), 
@@ -179,8 +179,8 @@ if experiment :
                             model=bb_model, accuracy=sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)), 
                             dataset=dataset_name, threshold=threshold)
         graph_precision.show_precision(model=x, mean_precision=mean_model_precision)
-        graph_coverage_precision = baseGraph.BaseGraph(title="Results of discretization methods for coverage * precision", 
-                            y_label="coverage * precision", model=bb_model, threshold=threshold, 
+        graph_coverage_precision = baseGraph.BaseGraph(title="Results of discretization methods for 2/(1/coverage + 1/precision)", 
+                            y_label="2/(1/coverage + 1/precision)", model=bb_model, threshold=threshold, 
                             accuracy=sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)), dataset=dataset_name)
         graph_coverage_precision.show_coverage_precision(model=x, mean_coverage_precision=mean_model_coverage_precision)
         graph_time = baseGraph.BaseGraph(title="Results of time for discretization methods", y_label="time", 
@@ -208,12 +208,11 @@ if experiment :
 else:
     c=tree.DecisionTreeClassifier()
     c.fit(train, labels_train)
-    filename = "graph/" + dataset_name + "/" + type(c).__name__ + "/" + str(threshold) + "/"
     black_box_labels = c.predict(train)
     i = 0
     explainer = anchor_tabular.AnchorTabularExplainer(dataset.class_names, dataset.feature_names, dataset.train, dataset.categorical_names,
                                                                 black_box_labels=black_box_labels,
-                                                                discretizer="kmeans", filename=filename)
+                                                                discretizer="MDLP")
     predict_fn = lambda x: c.predict(x)
     bbox_train = sklearn.metrics.accuracy_score(dataset.labels_train, predict_fn(dataset.train))
     bbox_test = sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test))

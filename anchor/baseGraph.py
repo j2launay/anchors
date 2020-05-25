@@ -67,7 +67,7 @@ class BaseGraph:
         plt.bar(model, mean_coverage_precision, self.width, color=self.color)
         axes = plt.axes()
         axes.set_ylim([0, 1])
-        self.add_legend_bottom(title=" coverage * precision = ", mean=mean_coverage_precision, model=model)
+        self.add_legend_bottom(title=": 2/(1/coverage + 1/precision) = ", mean=mean_coverage_precision, model=model)
         plt.savefig(self.filename + "/graph_coverage_precision.png")
         plt.show(block=False)
         plt.pause(1)
