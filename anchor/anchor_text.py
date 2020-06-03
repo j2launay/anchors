@@ -52,7 +52,6 @@ class AnchorText(object):
             sentence_false_pertinents  = utils.generate_false_pertinent(
                     text, [], 1, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba, generate_sentence=True)
             text_pertinent = sentence_false_pertinents
-            print("TEST", text)
             processed = self.nlp(unicode(text_pertinent))
             words = [x.text for x in processed]
             # Positions in the sentence of the beginning of each word

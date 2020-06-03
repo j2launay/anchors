@@ -14,11 +14,11 @@ import sklearn
 import sklearn.model_selection
 import sklearn.linear_model
 import sklearn.ensemble
-import pandas as pd
 from sklearn import tree
 from sklearn.svm import LinearSVC
 from sklearn.tree.export import export_text
 from sklearn.neural_network import MLPClassifier
+import pandas as pd
 import spacy
 import sys
 import csv
@@ -32,10 +32,12 @@ from sklearn.naive_bayes import MultinomialNB
 import anchor_text
 from time import time
 import warnings
+"""
 sys.path.append('lime-tuner/LIME_TUNER_LIBRARY/')
 import utilities
 from tuner_library import tuner
 from lime.lime_text import LimeTextExplainer
+"""
 
 warnings.filterwarnings("ignore")
 os.environ['SPACY_WARNING_IGNORE'] = 'W008'
@@ -76,11 +78,11 @@ def print_text_explanation(predict, text, exp):
     print()
     print('Examples where anchor applies and model predicts %s:' % pred)
     print()
-    print('\n'.join([x[0] for x in exp.examples(only_same_prediction=True)]))
+    print('\n'.join([mask_word_boolean[0] for mask_word_boolean in exp.examples(only_same_prediction=True)]))
     print()
     print('Examples where anchor applies and model predicts %s:' % alternative)
     print()
-    print('\n'.join([x[0] for x in exp.examples(only_different_prediction=True)]))
+    print('\n'.join([mask_word_boolean[0] for mask_word_boolean in exp.examples(only_different_prediction=True)]))
 
     print('Partial anchor: %s' % (' AND '.join(exp.names(0))))
     print('Precision: %.2f' % exp.precision(0))
@@ -88,13 +90,13 @@ def print_text_explanation(predict, text, exp):
     print()
     print('Examples where anchor applies and model predicts %s:' % pred)
     print()
-    print('\n'.join([x[0] for x in exp.examples(partial_index=0, only_same_prediction=True)]))
+    print('\n'.join([mask_word_boolean[0] for mask_word_boolean in exp.examples(partial_index=0, only_same_prediction=True)]))
     print()
     print('Examples where anchor applies and model predicts %s:' % alternative)
     print()
-    print('\n'.join([x[0] for x in exp.examples(partial_index=0, only_different_prediction=True)]))
+    print('\n'.join([mask_word_boolean[0] for mask_word_boolean in exp.examples(partial_index=0, only_different_prediction=True)]))
 
-dataset = 'bert'
+dataset = 'polarity'
 if dataset == 'polarity':
     # dataset from http://www.cs.cornell.edu/people/pabo/movie-review-data/
     def load_polarity(path='/home/julien/Documents/stage/anchor/datasets/rt-polaritydata/rt-polaritydata'):
@@ -177,12 +179,13 @@ elif language == 'spanish':
     text = "La magia son personas. Nada es imposible. en Teatro Rialto"
 
 
-#models = [sklearn.linear_model.LogisticRegression(), MLPClassifier(alpha=1, max_iter=100), tree.DecisionTreeClassifier(), 
-#        LinearSVC(random_state=0, tol=1e-5), sklearn.ensemble.RandomForestClassifier(n_estimators=2, n_jobs=10), MultinomialNB(alpha=0.1)]
-models = [tuner(train[7],'lime-tuner/distilBert_model.pkl', class_names)] if dataset=='bert' else [MLPClassifier(alpha=1, max_iter=50)]
+models = [sklearn.linear_model.LogisticRegression(), MLPClassifier(alpha=1, max_iter=100), tree.DecisionTreeClassifier(), 
+        LinearSVC(random_state=0, tol=1e-5), sklearn.ensemble.RandomForestClassifier(n_estimators=2, n_jobs=10), MultinomialNB(alpha=0.1)]
+#models = [tuner(train[7],'lime-tuner/distilBert_model.pkl', class_names)] if dataset=='bert' else [MLPClassifier(alpha=1, max_iter=50)]
 bert = dataset=='bert'
-experiment = False
-x = [False, True]
+experiment = True
+mask_word_boolean = [False, True]
+mask_word_boolean_text = ['Replace all words', 'Use of mask word', 'Replace with pertinent negatif']
 threshold=0.2
 if experiment:
     for model in models:
@@ -207,13 +210,17 @@ if experiment:
         mean_model_precision = []
         mean_size_explanation = []
 
-        for j in range (len(x)):
+        for j in range (len(mask_word_boolean_text)):
             start = time()
-            explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=x[j])
+            if j < len(mask_word_boolean):
+                print("Use of mask word: ", mask_word_boolean[j])
+                explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=mask_word_boolean[j])
+            else:
+                print("Use of pertinent negatif: ")
+                explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=False)
             mean_precision = 0
             mean_coverage = 0
             mean_size = 0
-            print("Use of mask word : ", x[j])
             for i in range (time_experiment):
                 print("instance numéro :", i)
                 text = safe_str(test[i])
@@ -225,14 +232,20 @@ if experiment:
                     pred = class_names[predict_bert([text])]
                     alternative =  class_names[1 - predict_bert([text])]
                 print("prediction : ", pred)
-                if dataset != 'bert':
-                    exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True)
+                if j < len(mask_word_boolean):
+                    if dataset != 'bert':
+                        exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True)
+                    else:
+                        exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True)
                 else:
-                    exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True)
+                    if dataset != 'bert':
+                        exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs=True)
+                    else:
+                        exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True, pertinents_negatifs=True)
                 mean_coverage = mean_coverage + exp.coverage()
                 mean_precision = mean_precision + exp.precision()
                 mean_size = mean_size + len(exp.features())
-            file_csv = (filename + "/example_result_" + str(x[j]) + ".csv")
+            file_csv = (filename + "/example_result_" + str(mask_word_boolean_text[j]) + ".csv")
             generate_dataset.print_example_text(text, pred, alternative, exp, file_csv)
             end = time()
             mean_coverage = mean_coverage / time_experiment
@@ -245,31 +258,30 @@ if experiment:
         print("mean coverage", mean_model_coverage)
         print("mean precision", mean_model_precision)
         mean_model_coverage_precision = []
-        x = ['Replace all words', 'Use of mask word']
         for i in range(len(mean_model_coverage)):
-            mean_model_coverage_precision.append(mean_model_coverage[i]*mean_model_precision[i])
+            mean_model_coverage_precision.append(2/(1/mean_model_coverage[i]+1/mean_model_precision[i]))
 
         
         graph_coverage = baseGraph.BaseGraph(title="Difference of coverage for mask words", y_label="coverage", 
                     model=bb_model, accuracy=test_accuracy, dataset=dataset, threshold=threshold)
-        graph_coverage.show_coverage(model=x, mean_coverage=mean_model_coverage)
+        graph_coverage.show_coverage(model=mask_word_boolean_text, mean_coverage=mean_model_coverage)
         graph_precision = baseGraph.BaseGraph(title="Difference of precision for mask words", y_label="precision", 
                     model=bb_model, accuracy=test_accuracy, dataset=dataset, threshold=threshold)
-        graph_precision.show_precision(model=x, mean_precision=mean_model_precision)
-        graph_coverage_precision = baseGraph.BaseGraph(title="Difference of coverage * precision for mask words", 
-                    y_label="coverage * precision", model=bb_model, accuracy=test_accuracy, dataset=dataset,
+        graph_precision.show_precision(model=mask_word_boolean_text, mean_precision=mean_model_precision)
+        graph_coverage_precision = baseGraph.BaseGraph(title="Difference of 2/(1/coverage + 1/precision) for mask words", 
+                    y_label="2/(1/coverage + 1/precision)", model=bb_model, accuracy=test_accuracy, dataset=dataset,
                     threshold=threshold)
-        graph_coverage_precision.show_coverage_precision(model=x, mean_coverage_precision=mean_model_coverage_precision)
+        graph_coverage_precision.show_coverage_precision(model=mask_word_boolean_text, mean_coverage_precision=mean_model_coverage_precision)
         graph_time = baseGraph.BaseGraph(title="Results of time for mask words prediction", y_label="time", 
                     model=bb_model, accuracy=test_accuracy, dataset=dataset, threshold=threshold)
-        graph_time.show_time(model=x, mean_time=model_time)
+        graph_time.show_time(model=mask_word_boolean_text, mean_time=model_time)
         graph_size = baseGraph.BaseGraph(title="Results of size for mask words prediction", y_label="size", 
                     model=bb_model, accuracy=test_accuracy, dataset=dataset, threshold=threshold)
-        graph_size.show_size(model=x, mean_size=mean_size_explanation)
+        graph_size.show_size(model=mask_word_boolean_text, mean_size=mean_size_explanation)
         graph_size.writer_in_csv(dataset_name=dataset, dataset_size=size_data, bb_name=bb_model, bbox_train=train_accuracy, 
                                 bbox_test=test_accuracy, precision=mean_model_precision, coverage=mean_model_coverage, 
                                 coverage_precision=mean_model_coverage_precision, size=mean_size_explanation, 
-                                time=model_time, time_experiment=time_experiment, x=x, threshold=threshold)
+                                time=model_time, time_experiment=time_experiment, x=mask_word_boolean_text, threshold=threshold)
 elif bert:
     class_names = ['negative',  'positive']
     df = pd.read_csv('https://github.com/clairett/pytorch-sentiment-classification/raw/master/data/SST2/train.tsv', delimiter='\t', header=None)
@@ -304,13 +316,13 @@ else:
     model = models[0]
     model.fit(train_vectors, train_labels)
 
-    for j in range (len(x)):
-        explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=x[j])
-        print("Use of mask word : ", x[j])
+    for j in range (len(mask_word_boolean)):
+        explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=mask_word_boolean[j])
+        print("Use of mask word : ", mask_word_boolean[j])
         print("model: ", type(model).__name__)
         #text = safe_str(test[0])
         text = "This is good movie"
         print("text ", text)
-        pertinents_negatifs = (not x[j])
+        pertinents_negatifs = (not mask_word_boolean[j])
         exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs=pertinents_negatifs)
         print_text_explanation(predict_lr, text, exp)
