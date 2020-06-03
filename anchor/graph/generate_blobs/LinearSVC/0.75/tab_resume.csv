@@ -9,16 +9,16 @@ anchors precision
 ,MDLP: ,1.0
 ""
 anchors coverage
-,kmeans: ,0.4
-,decile: ,0.28
-,quartile: ,0.42
+,kmeans: ,0.43
+,decile: ,0.32
+,quartile: ,0.44
 ,entropy: ,0.5
 ,MDLP: ,0.5
 ""
 anchors prec*coverage
-,kmeans: ,0.4
-,decile: ,0.28
-,quartile: ,0.42
+,kmeans: ,0.43
+,decile: ,0.32
+,quartile: ,0.44
 ,entropy: ,0.5
 ,MDLP: ,0.5
 ""
@@ -30,11 +30,11 @@ anchors size
 ,MDLP: ,1.0
 ""
 time to compute anchors
-,kmeans: ,8.9
-,decile: ,6.34
-,quartile: ,3.72
-,entropy: ,2.48
-,MDLP: ,2.51
+,kmeans: ,107.37
+,decile: ,119.48
+,quartile: ,61.22
+,entropy: ,39.26
+,MDLP: ,40.78
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-generate_blobs,10000,2,50
+generate_blobs,15000,2,1000
