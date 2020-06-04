@@ -1,35 +1,40 @@
-black box type,black box train accuracy,black box test accuracy
-DecisionTreeClassifier,1.0,0.998
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+DecisionTreeClassifier,1.0,0.98,0.1
 
 anchors precision
-,decile: ,0.98
-,quartile: ,0.96
-,entropy: ,0.98
-,MDLP: ,0.98
+,kmeans: ,0.96
+,decile: ,0.97
+,quartile: ,0.94
+,entropy: ,0.96
+,MDLP: ,0.95
 ""
 anchors coverage
-,decile: ,0.23
-,quartile: ,0.3
-,entropy: ,0.25
-,MDLP: ,0.27
+,kmeans: ,0.32
+,decile: ,0.28
+,quartile: ,0.36
+,entropy: ,0.33
+,MDLP: ,0.35
 ""
 anchors prec*coverage
-,decile: ,0.23
-,quartile: ,0.29
-,entropy: ,0.25
-,MDLP: ,0.27
+,kmeans: ,0.47
+,decile: ,0.43
+,quartile: ,0.52
+,entropy: ,0.49
+,MDLP: ,0.51
 ""
 anchors size
+,kmeans: ,1.0
 ,decile: ,1.0
 ,quartile: ,1.0
 ,entropy: ,1.0
 ,MDLP: ,1.0
 ""
 time to compute anchors
-,decile: ,9.03
-,quartile: ,4.67
-,entropy: ,9.07
-,MDLP: ,41.85
+,kmeans: ,9.95
+,decile: ,13.51
+,quartile: ,4.92
+,entropy: ,6.97
+,MDLP: ,4.92
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-generate_moons,10000,2,40
+generate_moons,1000,2,100

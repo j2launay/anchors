@@ -1,35 +1,40 @@
-black box type,black box train accuracy,black box test accuracy
-LinearSVC,0.518,0.511
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LinearSVC,1.0,0.97,0.1
 
 anchors precision
-,decile: ,0.46
-,quartile: ,0.49
-,entropy: ,0.51
-,MDLP: ,0.51
+,kmeans: ,0.57
+,decile: ,0.66
+,quartile: ,0.55
+,entropy: ,0.68
+,MDLP: ,0.67
 ""
 anchors coverage
-,decile: ,0.28
-,quartile: ,0.37
-,entropy: ,0.38
-,MDLP: ,0.38
+,kmeans: ,0.49
+,decile: ,0.44
+,quartile: ,0.5
+,entropy: ,0.54
+,MDLP: ,0.64
 ""
 anchors prec*coverage
-,decile: ,0.13
-,quartile: ,0.18
-,entropy: ,0.19
-,MDLP: ,0.19
+,kmeans: ,0.53
+,decile: ,0.53
+,quartile: ,0.53
+,entropy: ,0.6
+,MDLP: ,0.66
 ""
 anchors size
+,kmeans: ,1.0
 ,decile: ,1.0
 ,quartile: ,1.0
 ,entropy: ,1.0
 ,MDLP: ,1.0
 ""
 time to compute anchors
-,decile: ,10.37
-,quartile: ,5.48
-,entropy: ,10.18
-,MDLP: ,57.88
+,kmeans: ,13.0
+,decile: ,18.31
+,quartile: ,5.61
+,entropy: ,9.53
+,MDLP: ,4.66
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-generate_circles,10000,2,50
+generate_circles,1000,2,100
