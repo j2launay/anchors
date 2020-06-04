@@ -2,34 +2,39 @@ black box type,black box train accuracy,black box test accuracy,anchor precision
 LogisticRegression,1.0,1.0,0.95
 
 anchors precision
+,kmeans: ,1.0
 ,decile: ,1.0
 ,quartile: ,1.0
 ,entropy: ,1.0
 ,MDLP: ,1.0
 ""
 anchors coverage
-,decile: ,0.41
-,quartile: ,0.46
-,entropy: ,0.5
-,MDLP: ,0.5
+,kmeans: ,0.41
+,decile: ,0.37
+,quartile: ,0.38
+,entropy: ,0.51
+,MDLP: ,0.51
 ""
 anchors prec*coverage
-,decile: ,0.41
-,quartile: ,0.46
-,entropy: ,0.5
-,MDLP: ,0.5
+,kmeans: ,0.58
+,decile: ,0.54
+,quartile: ,0.55
+,entropy: ,0.67
+,MDLP: ,0.67
 ""
 anchors size
+,kmeans: ,1.0
 ,decile: ,1.0
 ,quartile: ,1.0
 ,entropy: ,1.0
 ,MDLP: ,1.0
 ""
 time to compute anchors
-,decile: ,3.95
-,quartile: ,1.81
-,entropy: ,1.91
-,MDLP: ,1.93
+,kmeans: ,9.26
+,decile: ,10.46
+,quartile: ,4.53
+,entropy: ,2.75
+,MDLP: ,2.76
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-generate_blobs,10000,2,20
+generate_blobs,1000,2,100

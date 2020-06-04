@@ -1,35 +1,40 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-RandomForestClassifier,1.0,0.983,0.95
+RandomForestClassifier,1.0,0.96,0.95
 
 anchors precision
-,decile: ,0.8
-,quartile: ,0.62
-,entropy: ,0.67
-,MDLP: ,0.68
+,kmeans: ,0.64
+,decile: ,0.74
+,quartile: ,0.61
+,entropy: ,0.7
+,MDLP: ,0.77
 ""
 anchors coverage
+,kmeans: ,0.18
 ,decile: ,0.16
-,quartile: ,0.28
-,entropy: ,0.64
-,MDLP: ,0.39
+,quartile: ,0.19
+,entropy: ,0.45
+,MDLP: ,0.52
 ""
 anchors prec*coverage
-,decile: ,0.13
-,quartile: ,0.17
-,entropy: ,0.43
-,MDLP: ,0.27
+,kmeans: ,0.28
+,decile: ,0.26
+,quartile: ,0.29
+,entropy: ,0.55
+,MDLP: ,0.62
 ""
 anchors size
-,decile: ,4.15
-,quartile: ,3.4
-,entropy: ,7.75
-,MDLP: ,7.3
+,kmeans: ,8.14
+,decile: ,4.79
+,quartile: ,3.69
+,entropy: ,3.69
+,MDLP: ,2.39
 ""
 time to compute anchors
-,decile: ,226.59
-,quartile: ,107.52
-,entropy: ,224.55
-,MDLP: ,201.42
+,kmeans: ,17.72
+,decile: ,20.9
+,quartile: ,7.31
+,entropy: ,11.79
+,MDLP: ,5.13
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-generate_circles,10000,2,20
+generate_circles,1000,2,100
