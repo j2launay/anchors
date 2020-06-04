@@ -1,0 +1,13 @@
+"text: b'never does "" lilo & stitch "" reach the emotion or timelessness of disney\'s great past , or even that of more recent successes such as "" mulan "" or "" tarzan . ""'"
+Prediction: positif
+Anchor: []
+Precision: 1.0
+Coverage: 1
+
+Examples where anchor applies and model predicts :positif
+
+""
+
+Examples where anchor applies and model predicts :negatif
+
+""

@@ -1,0 +1,22 @@
+"text: b'never does "" lilo & stitch "" reach the emotion or timelessness of disney\'s great past , or even that of more recent successes such as "" mulan "" or "" tarzan . ""'"
+Prediction: positif
+"Anchor: ['as', ',']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positif
+
+"b'never UNK UNK lilo UNK UNK UNK reach the emotion UNK UNK of UNK 's UNK UNK , or UNK that UNK more recent UNK UNK as "" UNK UNK UNK UNK UNK UNK "" UNK
+b'never UNK "" UNK & UNK "" reach the emotion UNK timelessness of disney\ UNK great UNK , or UNK UNK of more UNK UNK UNK as "" UNK UNK or "" tarzan UNK UNK UNK
+UNK UNK UNK UNK & stitch UNK UNK UNK emotion or timelessness UNK disney\ UNK UNK UNK , UNK UNK that of UNK recent UNK such as UNK mulan "" UNK "" tarzan . "" UNK
+UNK UNK "" UNK UNK UNK "" reach UNK UNK UNK UNK of disney\ UNK great past , or even UNK UNK UNK recent UNK such as "" mulan "" UNK "" UNK . "" '
+UNK does "" lilo UNK UNK UNK reach UNK emotion or timelessness UNK disney\ UNK UNK past , UNK even that of more recent successes such as "" mulan "" UNK "" tarzan UNK UNK UNK
+UNK UNK UNK lilo UNK stitch UNK reach UNK emotion UNK UNK UNK UNK 's UNK past , or UNK that of UNK UNK UNK such as UNK UNK UNK or UNK tarzan . "" '
+b'never does "" lilo UNK stitch UNK reach UNK UNK or UNK UNK UNK 's UNK past , or even UNK UNK more UNK UNK such as "" UNK UNK or "" UNK UNK UNK '
+UNK does UNK UNK UNK UNK UNK reach the emotion or timelessness of UNK 's UNK UNK , or even that of more recent successes such as "" mulan "" or UNK UNK UNK "" '
+b'never does UNK UNK & UNK "" UNK the emotion or timelessness of UNK 's great past , UNK UNK UNK of more recent UNK UNK as "" UNK "" or UNK UNK UNK "" UNK
+UNK does UNK lilo & stitch UNK reach UNK emotion UNK UNK UNK UNK UNK UNK past , UNK UNK UNK UNK UNK UNK UNK UNK as "" mulan "" UNK "" UNK . "" UNK"
+
+Examples where anchor applies and model predicts :negatif
+
+""
