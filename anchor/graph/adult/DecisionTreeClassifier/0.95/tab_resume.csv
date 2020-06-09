@@ -2,34 +2,39 @@ black box type,black box train accuracy,black box test accuracy,anchor precision
 DecisionTreeClassifier,0.9852530888800319,0.8565965583173997,0.95
 
 anchors precision
-,decile: ,1.0
-,quartile: ,1.0
-,entropy: ,1.0
-,MDLP: ,1.0
+,kmeans: ,0.97
+,decile: ,0.98
+,quartile: ,0.96
+,entropy: ,0.96
+,MDLP: ,0.93
 ""
 anchors coverage
-,decile: ,0.0
-,quartile: ,0.0
-,entropy: ,0.0
-,MDLP: ,0.0
+,kmeans: ,0.01
+,decile: ,0.01
+,quartile: ,0.02
+,entropy: ,0.01
+,MDLP: ,0.02
 ""
 anchors prec*coverage
-,decile: ,0.0
-,quartile: ,0.0
-,entropy: ,0.0
-,MDLP: ,0.0
+,kmeans: ,0.02
+,decile: ,0.02
+,quartile: ,0.03
+,entropy: ,0.03
+,MDLP: ,0.04
 ""
 anchors size
-,decile: ,11.5
-,quartile: ,8.5
-,entropy: ,8.0
-,MDLP: ,13.0
+,kmeans: ,8.97
+,decile: ,8.08
+,quartile: ,6.66
+,entropy: ,8.66
+,MDLP: ,7.19
 ""
 time to compute anchors
-,decile: ,3.16
-,quartile: ,1.21
-,entropy: ,1.98
-,MDLP: ,20.07
+,kmeans: ,139.46
+,decile: ,101.88
+,quartile: ,64.69
+,entropy: ,96.53
+,MDLP: ,93.87
 ""
 dataset name,dataset size,dataset nb feature,Number of instances running
-adult,15682,12,2
+adult,15682,12,100

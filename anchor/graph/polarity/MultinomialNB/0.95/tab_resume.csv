@@ -1,25 +1,30 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-MultinomialNB,0.9595260284915458,0.7546717776712986,0.95
+MultinomialNB,1.0,0.5815602836879432,0.95
 
 anchors precision
-,Use of mask word: ,0.99
-,Replace all words: ,0.86
+,Replace with pertinent negatif: ,0.92
+,Replace all words: ,1.0
+,Use of mask word: ,1.0
 ""
 anchors coverage
-,Use of mask word: ,0.66
-,Replace all words: ,0.57
+,Replace with pertinent negatif: ,0.43
+,Replace all words: ,0.25
+,Use of mask word: ,0.91
 ""
 anchors prec*coverage
-,Use of mask word: ,0.66
-,Replace all words: ,0.49
+,Replace with pertinent negatif: ,0.58
+,Replace all words: ,0.4
+,Use of mask word: ,0.95
 ""
 anchors size
-,Use of mask word: ,2.85
-,Replace all words: ,5.8
+,Replace with pertinent negatif: ,2.1
+,Replace all words: ,2.0
+,Use of mask word: ,2.0
 ""
 time to compute anchors
-,Use of mask word: ,29.97
-,Replace all words: ,1291.93
+,Replace with pertinent negatif: ,678.06
+,Replace all words: ,12.0
+,Use of mask word: ,367.24
 ""
 dataset name,dataset size,Number of instances running
-polarity,10433,20
+polarity,783,10

@@ -1,25 +1,30 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-LinearSVC,0.998801757422447,0.747963584091998,0.75
+LinearSVC,1.0,0.5602836879432624,0.75
 
 anchors precision
-,Use of mask word: ,0.97
-,Replace all words: ,0.94
+,Replace with pertinent negatif: ,0.96
+,Replace all words: ,0.99
+,Use of mask word: ,0.99
 ""
 anchors coverage
-,Use of mask word: ,0.59
-,Replace all words: ,0.71
+,Replace with pertinent negatif: ,0.54
+,Replace all words: ,0.22
+,Use of mask word: ,0.72
 ""
 anchors prec*coverage
-,Use of mask word: ,0.57
-,Replace all words: ,0.67
+,Replace with pertinent negatif: ,0.69
+,Replace all words: ,0.37
+,Use of mask word: ,0.83
 ""
 anchors size
-,Use of mask word: ,2.4
-,Replace all words: ,3.25
+,Replace with pertinent negatif: ,4.8
+,Replace all words: ,2.9
+,Use of mask word: ,2.1
 ""
 time to compute anchors
-,Use of mask word: ,27.62
-,Replace all words: ,1194.19
+,Replace with pertinent negatif: ,685.75
+,Replace all words: ,14.17
+,Use of mask word: ,430.29
 ""
 dataset name,dataset size,Number of instances running
-polarity,10433,20
+polarity,783,10
