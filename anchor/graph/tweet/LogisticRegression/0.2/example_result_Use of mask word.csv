@@ -1,22 +1,22 @@
 text: Totally worth getting caught in this evening's downpour. #jacquelineonassisreservoir... 
-Prediction: 😁
-"Anchor: ['worth', 'jacquelineonassisreservoir']"
+Prediction: 😂
+"Anchor: ['caught', 'this']"
 Precision: 1.0
 Coverage: 0.0
 
-Examples where anchor applies and model predicts :😁
+Examples where anchor applies and model predicts :😂
 
-"Totally worth getting UNK in this UNK 's UNK UNK UNK ja
-Totally worth getting caught in this UNK 's downpour UN
-UNK worth UNK UNK UNK this UNK UNK downpour . # jacquel
-UNK worth UNK UNK in UNK evening UNK UNK . UNK jacqueli
-UNK worth UNK caught in UNK UNK 's downpour UNK # jacqu
-Totally worth getting UNK in UNK evening UNK UNK . # ja
-Totally worth getting UNK in UNK evening UNK UNK . # ja
-Totally worth getting UNK UNK UNK evening 's UNK UNK # 
-Totally worth getting caught UNK UNK evening 's downpou
-Totally worth getting caught UNK this evening UNK UNK U"
+"UNK UNK UNK caught in this UNK UNK downpour . # jacquelineonassis
+UNK worth getting caught in this UNK UNK downpour . # UNK UNK
+Totally UNK UNK caught UNK this evening UNK downpour UNK # jacque
+UNK worth getting caught in this UNK 's downpour . UNK UNK UNK
+Totally worth getting caught in this UNK 's downpour UNK # jacque
+Totally UNK getting caught UNK this UNK UNK downpour . # UNK UNK
+UNK UNK getting caught UNK this UNK UNK UNK UNK UNK UNK UNK
+UNK worth getting caught in this evening UNK downpour UNK UNK UNK
+Totally UNK getting caught UNK this evening 's downpour . UNK jac
+Totally UNK getting caught in this evening UNK downpour UNK UNK j"
 
-Examples where anchor applies and model predicts :😊
+Examples where anchor applies and model predicts :😜
 
 ""

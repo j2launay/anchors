@@ -1,40 +1,40 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-DecisionTreeClassifier,1.0,0.9853333333333333,0.75
-
-anchors precision
-,kmeans: ,0.6
-,decile: ,0.71
-,quartile: ,0.59
-,entropy: ,0.71
-,MDLP: ,0.74
-""
-anchors coverage
-,kmeans: ,0.27
-,decile: ,0.28
-,quartile: ,0.3
-,entropy: ,0.59
-,MDLP: ,0.34
-""
-anchors prec*coverage
-,kmeans: ,0.16
-,decile: ,0.2
-,quartile: ,0.18
-,entropy: ,0.42
-,MDLP: ,0.25
-""
-anchors size
-,kmeans: ,3.06
-,decile: ,2.13
-,quartile: ,2.37
-,entropy: ,2.62
-,MDLP: ,2.07
-""
-time to compute anchors
-,kmeans: ,198.77
-,decile: ,305.85
-,quartile: ,121.3
-,entropy: ,337.35
-,MDLP: ,358.75
-""
+DecisionTreeClassifier,1,0.985333333333333,0.75
+,,,
+anchors precision,,,
+,kmeans: ,0.6,
+,decile: ,0.71,
+,quartile: ,0.59,
+,entropy: ,0.71,
+,MDLP: ,0.74,
+,,,
+anchors coverage,,,Normalized coverage
+,kmeans: ,0.27,0.46
+,decile: ,0.28,0.47
+,quartile: ,0.3,0.51
+,entropy: ,0.59,1.00
+,MDLP: ,0.34,0.58
+,,,
+anchors prec*coverage,,,Normalized F1
+,kmeans: ,0.16,0.52
+,decile: ,0.2,0.57
+,quartile: ,0.18,0.55
+,entropy: ,0.42,0.83
+,MDLP: ,0.25,0.65
+,,,
+anchors size,,,
+,kmeans: ,3.06,
+,decile: ,2.13,
+,quartile: ,2.37,
+,entropy: ,2.62,
+,MDLP: ,2.07,
+,,,
+time to compute anchors,,,
+,kmeans: ,198.77,
+,decile: ,305.85,
+,quartile: ,121.3,
+,entropy: ,337.35,
+,MDLP: ,358.75,
+,,,
 dataset name,dataset size,dataset nb feature,Number of instances running
 generate_circles,15000,2,1000

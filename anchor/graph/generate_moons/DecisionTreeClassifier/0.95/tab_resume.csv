@@ -1,40 +1,40 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-DecisionTreeClassifier,1.0,0.98,0.95
-
-anchors precision
-,kmeans: ,0.54
-,decile: ,0.55
-,quartile: ,0.63
-,entropy: ,0.54
-,MDLP: ,0.54
-""
-anchors coverage
-,kmeans: ,0.21
-,decile: ,0.22
-,quartile: ,0.25
-,entropy: ,0.28
-,MDLP: ,0.3
-""
-anchors prec*coverage
-,kmeans: ,0.3
-,decile: ,0.32
-,quartile: ,0.35
-,entropy: ,0.37
-,MDLP: ,0.39
-""
-anchors size
-,kmeans: ,2.23
-,decile: ,2.0
-,quartile: ,2.49
-,entropy: ,2.67
-,MDLP: ,2.59
-""
-time to compute anchors
-,kmeans: ,10.06
-,decile: ,13.89
-,quartile: ,5.31
-,entropy: ,7.87
-,MDLP: ,5.42
-""
+DecisionTreeClassifier,1,0.98,0.95
+,,,
+anchors precision,,,
+,kmeans: ,0.54,
+,decile: ,0.55,
+,quartile: ,0.63,
+,entropy: ,0.54,
+,MDLP: ,0.54,
+,,,
+anchors coverage,,,Normalized coverage
+,kmeans: ,0.21,0.70
+,decile: ,0.22,0.73
+,quartile: ,0.25,0.83
+,entropy: ,0.28,0.93
+,MDLP: ,0.3,1.00
+,,,
+anchors prec*coverage,,,Normalized F1
+,kmeans: ,0.3,0.61
+,decile: ,0.32,0.63
+,quartile: ,0.35,0.72
+,entropy: ,0.37,0.68
+,MDLP: ,0.39,0.70
+,,,
+anchors size,,,
+,kmeans: ,2.23,
+,decile: ,2,
+,quartile: ,2.49,
+,entropy: ,2.67,
+,MDLP: ,2.59,
+,,,
+time to compute anchors,,,
+,kmeans: ,10.06,
+,decile: ,13.89,
+,quartile: ,5.31,
+,entropy: ,7.87,
+,MDLP: ,5.42,
+,,,
 dataset name,dataset size,dataset nb feature,Number of instances running
 generate_moons,1000,2,100

@@ -1,40 +1,40 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-RandomForestClassifier,0.9852530888800319,0.8527724665391969,0.75
-
-anchors precision
-,kmeans: ,0.9
-,decile: ,0.91
-,quartile: ,0.89
-,entropy: ,0.89
-,MDLP: ,0.89
-""
-anchors coverage
-,kmeans: ,0.04
-,decile: ,0.04
-,quartile: ,0.04
-,entropy: ,0.04
-,MDLP: ,0.04
-""
-anchors prec*coverage
-,kmeans: ,0.07
-,decile: ,0.07
-,quartile: ,0.07
-,entropy: ,0.09
-,MDLP: ,0.09
-""
-anchors size
-,kmeans: ,3.0
-,decile: ,2.61
-,quartile: ,2.67
-,entropy: ,2.16
-,MDLP: ,3.01
-""
-time to compute anchors
-,kmeans: ,85.4
-,decile: ,83.47
-,quartile: ,52.18
-,entropy: ,78.4
-,MDLP: ,96.07
-""
+RandomForestClassifier,0.985253088880032,0.852772466539197,0.75
+,,,
+anchors precision,,,
+,kmeans: ,0.9,
+,decile: ,0.91,
+,quartile: ,0.89,
+,entropy: ,0.89,
+,MDLP: ,0.89,
+,,,
+anchors coverage,,,Normalized coverage
+,kmeans: ,0.04,1.00
+,decile: ,0.04,1.00
+,quartile: ,0.04,1.00
+,entropy: ,0.04,1.00
+,MDLP: ,0.04,1.00
+,,,
+anchors prec*coverage,,,Normalized F1
+,kmeans: ,0.07,0.95
+,decile: ,0.07,0.95
+,quartile: ,0.07,0.94
+,entropy: ,0.09,0.94
+,MDLP: ,0.09,0.94
+,,,
+anchors size,,,
+,kmeans: ,3,
+,decile: ,2.61,
+,quartile: ,2.67,
+,entropy: ,2.16,
+,MDLP: ,3.01,
+,,,
+time to compute anchors,,,
+,kmeans: ,85.4,
+,decile: ,83.47,
+,quartile: ,52.18,
+,entropy: ,78.4,
+,MDLP: ,96.07,
+,,,
 dataset name,dataset size,dataset nb feature,Number of instances running
 adult,15682,12,100

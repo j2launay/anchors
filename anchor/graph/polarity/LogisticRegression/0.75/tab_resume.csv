@@ -1,30 +1,30 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-LogisticRegression,1.0,0.5645390070921986,0.75
-
-anchors precision
-,Replace with pertinent negatif: ,0.98
-,Replace all words: ,0.98
-,Use of mask word: ,1.0
-""
-anchors coverage
-,Replace with pertinent negatif: ,0.82
-,Replace all words: ,0.22
-,Use of mask word: ,0.78
-""
-anchors prec*coverage
-,Replace with pertinent negatif: ,0.89
-,Replace all words: ,0.36
-,Use of mask word: ,0.87
-""
-anchors size
-,Replace with pertinent negatif: ,3.7
-,Replace all words: ,5.4
-,Use of mask word: ,2.0
-""
-time to compute anchors
-,Replace with pertinent negatif: ,719.46
-,Replace all words: ,52.83
-,Use of mask word: ,370.21
-""
-dataset name,dataset size,Number of instances running
-polarity,783,10
+LogisticRegression,1,0.564539007092199,0.75
+,,,
+anchors precision,,,
+,Replace with pertinent negatif: ,0.98,
+,Replace all words: ,0.98,
+,Use of mask word: ,1,
+,,,
+anchors coverage,,,Normalized coverage
+,Replace with pertinent negatif: ,0.82,1.00
+,Replace all words: ,0.22,0.27
+,Use of mask word: ,0.78,0.95
+,,,
+anchors prec*coverage,,,Normalized F1
+,Replace with pertinent negatif: ,0.89,0.99
+,Replace all words: ,0.36,0.42
+,Use of mask word: ,0.87,0.98
+,,,
+anchors size,,,
+,Replace with pertinent negatif: ,3.7,
+,Replace all words: ,5.4,
+,Use of mask word: ,2,
+,,,
+time to compute anchors,,,
+,Replace with pertinent negatif: ,719.46,
+,Replace all words: ,52.83,
+,Use of mask word: ,370.21,
+,,,
+dataset name,dataset size,Number of instances running,
+polarity,783,10,

@@ -1,25 +1,30 @@
-black box type,black box train accuracy,black box test accuracy
-MLPClassifier,0.9897013388259527,0.22576159803680168
-
-anchors precision
-,Use of mask word: ,1.0
-,Replace all words: ,0.71
-""
-anchors coverage
-,Use of mask word: ,0.85
-,Replace all words: ,0.43
-""
-anchors prec*coverage
-,Use of mask word: ,0.85
-,Replace all words: ,0.31
-""
-anchors size
-,Use of mask word: ,0.4
-,Replace all words: ,3.4
-""
-time to compute anchors
-,Use of mask word: ,1.53
-,Replace all words: ,214.65
-""
-dataset name,dataset size,Number of instances running
-tweet,485235,5
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+MLPClassifier,0.287850322979129,0.277546099842388,0.95
+,,,
+anchors precision,,,
+,Replace all words: ,0.91,
+,Use of mask word: ,0.99,
+,Replace with pertinent negatif: ,0.9,
+,,,
+anchors coverage,,,Normalized coverage
+,Replace all words: ,0.57,0.80
+,Use of mask word: ,0.2,0.28
+,Replace with pertinent negatif: ,0.71,1.00
+,,,
+anchors prec*coverage,,,Normalized F1
+,Replace all words: ,0.71,0.85
+,Use of mask word: ,0.34,0.44
+,Replace with pertinent negatif: ,0.79,0.95
+,,,
+anchors size,,,
+,Replace all words: ,2.1,
+,Use of mask word: ,4.6,
+,Replace with pertinent negatif: ,7.2,
+,,,
+time to compute anchors,,,
+,Replace all words: ,318.15,
+,Use of mask word: ,18.16,
+,Replace with pertinent negatif: ,147.34,
+,,,
+dataset name,dataset size,Number of instances running,
+tweet,476006,10,

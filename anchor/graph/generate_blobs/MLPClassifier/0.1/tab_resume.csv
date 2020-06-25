@@ -1,40 +1,40 @@
 black box type,black box train accuracy,black box test accuracy,anchor precision threshold
-MLPClassifier,1.0,1.0,0.1
-
-anchors precision
-,kmeans: ,1.0
-,decile: ,1.0
-,quartile: ,0.99
-,entropy: ,1.0
-,MDLP: ,1.0
-""
-anchors coverage
-,kmeans: ,0.41
-,decile: ,0.32
-,quartile: ,0.42
-,entropy: ,0.51
-,MDLP: ,0.51
-""
-anchors prec*coverage
-,kmeans: ,0.58
-,decile: ,0.49
-,quartile: ,0.59
-,entropy: ,0.67
-,MDLP: ,0.67
-""
-anchors size
-,kmeans: ,1.0
-,decile: ,1.0
-,quartile: ,1.0
-,entropy: ,1.0
-,MDLP: ,1.0
-""
-time to compute anchors
-,kmeans: ,10.15
-,decile: ,10.75
-,quartile: ,4.58
-,entropy: ,2.71
-,MDLP: ,2.72
-""
+MLPClassifier,1,1,0.1
+,,,
+anchors precision,,,
+,kmeans: ,1,
+,decile: ,1,
+,quartile: ,0.99,
+,entropy: ,1,
+,MDLP: ,1,
+,,,
+anchors coverage,,,Normalized coverage
+,kmeans: ,0.41,0.80
+,decile: ,0.32,0.63
+,quartile: ,0.42,0.82
+,entropy: ,0.51,1.00
+,MDLP: ,0.51,1.00
+,,,
+anchors prec*coverage,,,Normalized F1
+,kmeans: ,0.58,0.89
+,decile: ,0.49,0.77
+,quartile: ,0.59,0.90
+,entropy: ,0.67,1.00
+,MDLP: ,0.67,1.00
+,,,
+anchors size,,,
+,kmeans: ,1,
+,decile: ,1,
+,quartile: ,1,
+,entropy: ,1,
+,MDLP: ,1,
+,,,
+time to compute anchors,,,
+,kmeans: ,10.15,
+,decile: ,10.75,
+,quartile: ,4.58,
+,entropy: ,2.71,
+,MDLP: ,2.72,
+,,,
 dataset name,dataset size,dataset nb feature,Number of instances running
 generate_blobs,1000,2,100
