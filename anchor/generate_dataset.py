@@ -84,6 +84,41 @@ def generate(target_instance_x, target_instance_y, anchors, blackbox, n_samples=
                     width = max(float(x) for x in x_bounds) - min(float(y) for y in x_bounds)
         return x_min, y_min, width, height
 
+    def draw_black_box(ax, x_min, y_min, x_max, y_max, blackbox) :
+        """
+        This function draw the background of the graph depending of the prediction of the black box
+        """
+        X_test = np.linspace(x_min-5, x_max+5, 100) 
+        Y_test = np.linspace(y_min-5, y_max+5, 100)
+        X_prime = np.transpose([np.tile(X_test, len(Y_test)), np.repeat(Y_test, len(X_test))])
+
+        X_test, Y_test = np.meshgrid(X_test, Y_test)
+        if type(blackbox) == linear_model.LogisticRegression :
+            loss = expit(np.matmul(X_prime, np.transpose(blackbox.coef_)) + blackbox.intercept_).ravel()
+        else:
+            loss = blackbox.predict(X_prime)    
+        loss =  np.array(np.split(loss, 100))
+        ax.pcolormesh(X_test, Y_test, loss, cmap='gray')
+        ax.axis([x_min-5, x_max+5, y_min-5, y_max+5])
+        return blackbox
+
+    def draw_rectangle(ax, x_min_anchors, y_min_anchors, width, height):
+        """
+        Draw the rectangle upon the graphics
+        """
+        if y_min_anchors != y_min-4:
+            ax.plot([x_min_anchors, x_min_anchors + width], [y_min_anchors, y_min_anchors],'r-')
+            ax.plot([x_min_anchors + width, x_min_anchors], [y_min_anchors + height, y_min_anchors + height], 'y-')
+        else:
+            ax.plot([x_min_anchors, x_min_anchors + width], [y_min_anchors, y_min_anchors],'r-', linestyle='dashed')
+            ax.plot([x_min_anchors + width, x_min_anchors], [y_min_anchors + height, y_min_anchors + height], 'y-', linestyle='dashed')
+        if x_min_anchors != x_min-4 :
+            ax.plot([x_min_anchors, x_min_anchors], [y_min_anchors, y_min_anchors + height], 'g-')
+            ax.plot([x_min_anchors + width, x_min_anchors + width], [y_min_anchors, y_min_anchors + height], 'b-')
+        else:
+            ax.plot([x_min_anchors, x_min_anchors], [y_min_anchors, y_min_anchors + height], 'g-', linestyle='dashed')
+            ax.plot([x_min_anchors + width, x_min_anchors + width], [y_min_anchors, y_min_anchors + height], 'b-', linestyle='dashed')
+
     if not experiment:
         #X, Y = make_blobs(n_samples=n_samples, centers=centers, n_features=n_features)
         # scatter plot, dots colored by class value
@@ -95,32 +130,14 @@ def generate(target_instance_x, target_instance_y, anchors, blackbox, n_samples=
         x_max = max([x[0] for x in X])
         y_min = min([y[1] for y in X])
         y_max = max([y[1] for y in X])
-        def draw_black_box(ax, X, Y, x_min, y_min, x_max, y_max, blackbox) :
-            X_test = np.linspace(x_min-5, x_max+5, 100) 
-            Y_test = np.linspace(y_min-5, y_max+5, 100)
-            X_prime = np.transpose([np.tile(X_test, len(Y_test)), 
-                                np.repeat(Y_test, len(X_test))])
-
-            X_test, Y_test = np.meshgrid(X_test, Y_test)
-            if type(blackbox) == linear_model.LogisticRegression :
-                loss = expit(np.matmul(X_prime, np.transpose(blackbox.coef_)) + blackbox.intercept_).ravel()
-            else:
-                loss = blackbox.predict(X_prime)    
-            loss =  np.array(np.split(loss, 100))
-            #ax.plot(newx, newy,  color='gray', linewidth=3)
-            ax.pcolormesh(X_test, Y_test, loss, cmap='gray')
-            ax.axis([x_min-5, x_max+5, y_min-5, y_max+5])
-            return blackbox
-            #loss_parts = np.split(loss, 2)
-            #ax.plot(loss_parts[0], loss_parts[1], color='gray', linewidth=3)
 
         ax = pyplot.subplot(111)
         text = "Anchors: " + str(anchors)
         props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
         # place a text box in upper left in axes coords
         ax.text(0.05, 0.95, text, transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=props)
-        
-        draw_black_box(ax, X, Y, x_min, y_min, x_max, y_max, blackbox)
+
+        draw_black_box(ax, x_min, y_min, x_max, y_max, blackbox)
 
         grouped = df.groupby('label')
         for key, group in grouped:
@@ -128,21 +145,6 @@ def generate(target_instance_x, target_instance_y, anchors, blackbox, n_samples=
 
         # Function to draw the target instance (Modify the markersize to modify the size of the star)
         ax.plot(target_instance_x, target_instance_y, marker="*", color='purple', markersize=20)
-
-        def draw_rectangle(ax, x_min_anchors, y_min_anchors, width, height):
-            # Draw the rectangle upon the graphics
-            if y_min_anchors != y_min-4:
-                ax.plot([x_min_anchors, x_min_anchors + width], [y_min_anchors, y_min_anchors],'r-')
-                ax.plot([x_min_anchors + width, x_min_anchors], [y_min_anchors + height, y_min_anchors + height], 'y-')
-            else:
-                ax.plot([x_min_anchors, x_min_anchors + width], [y_min_anchors, y_min_anchors],'r-', linestyle='dashed')
-                ax.plot([x_min_anchors + width, x_min_anchors], [y_min_anchors + height, y_min_anchors + height], 'y-', linestyle='dashed')
-            if x_min_anchors != x_min-4 :
-                ax.plot([x_min_anchors, x_min_anchors], [y_min_anchors, y_min_anchors + height], 'g-')
-                ax.plot([x_min_anchors + width, x_min_anchors + width], [y_min_anchors, y_min_anchors + height], 'b-')
-            else:
-                ax.plot([x_min_anchors, x_min_anchors], [y_min_anchors, y_min_anchors + height], 'g-', linestyle='dashed')
-                ax.plot([x_min_anchors + width, x_min_anchors + width], [y_min_anchors, y_min_anchors + height], 'b-', linestyle='dashed')
 
         x_min_anchors, y_min_anchors, width, height = pick_anchors_informations(x_min=x_min-4, y_min=y_min-4, width=x_max-x_min+8, height=y_max-y_min+8)
         draw_rectangle(ax, x_min_anchors, y_min_anchors, width, height)
@@ -186,9 +188,19 @@ def compare_values_to_anchor(xmin, ymin, x_range, y_range, v, w):
         return True
 
 def compute_coverage_tab(dataset, exp, anchors, pick_anchors_informations):
+    """
+    Create a tab of True or False for each instance of a given dataset.
+    This function allows to compute coverage for the artificial datasets (2 dimensions dataset)
+    args:
+        dataset: all the instances that are evaluated
+        exp: the anchor explanation object
+        anchors: anchor generated for the target instance
+       pick_anchors_informations: function used to return x_min, y_min, width and height of the instances 
+    """
     coverage_tab = []
     x_min, y_min, width, height = pick_anchors_informations(anchors=anchors, compute=True)
     if len(exp.features()) == 1:
+        # If the anchor is suitable for only one feature
         if exp.features()[0] == 0:
             for element in dataset.test[:, exp.features()]:
                 coverage_tab.append(compare_value_to_anchor(x_min, width, element))
@@ -196,6 +208,7 @@ def compute_coverage_tab(dataset, exp, anchors, pick_anchors_informations):
             for element in dataset.test[:, exp.features()]:
                 coverage_tab.append(compare_value_to_anchor(y_min, height, element))
     else:
+        # If the anchor works on the two other features
         for element in dataset.test[:, exp.features()]:
             coverage_tab.append(compare_values_to_anchor(x_min, y_min, width, height, element[0], element[1]))
     return coverage_tab

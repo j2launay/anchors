@@ -34,16 +34,20 @@ dataset_folder = '/home/julien/Documents/stage/anchor/datasets/'
 # for the moment; three possible datasets : adult (income revenue prediction)
 #                                           titanic (survival prediction)
 #                                           generate (2D generate dataset for visualisation)
-dataset_name = 'generate_blobs'
+dataset_name = 'generate_moons'
 if 'generate' in dataset_name:
+    # generate_moons generate 2 classes data point that have the shape of a moon
     if 'moons' in dataset_name:
         X, Y = make_moons(n_samples=10000, noise=0.1)
+    # generate_circles generate 2 classes data point that have the shape of a circle
     elif 'circles' in dataset_name:
         X, Y = make_circles(n_samples=10000, noise=0.05)
+    # generate_blobs generate 2 classes data point that are on different group of points
     else:
         dataset_name = 'generate_blobs'
-        X, Y = make_blobs(n_samples=10000, centers=2, n_features=2)
+        X, Y = make_blobs(n_samples=1000, centers=2, n_features=2)
     fichier_write = open("../datasets/generate/generate.data", "w+")
+    # Write in a "fichier_write" values for the generated data point 
     for x, y in zip(X, Y):
         text = ("%s%s %s\n" % (str(x).replace('[ ', '').replace('[', '').replace(' [', '').replace(' ]', '').
                                replace(']', '').replace(' ', ', ').replace(', , ,', ',').replace(', ,', ','), ',', y))
@@ -55,13 +59,18 @@ dataset = utils.load_dataset(dataset_name, balance=True, discretize=False, datas
 train, labels_train = dataset.train, dataset.labels_train
 print("Names of the different features: ", dataset.feature_names)
 print()
+# If parameter "experiment" sets to "True", runs "time_experiment" times on each model from "models" an explanation
 experiment = True
-threshold=0.75
+# "threshold" represents the minimum threshold precision for a good anchor
+threshold = 0.95
 if experiment :
+    # Each model from "models" are used to run and compare explanations
     models=[tree.DecisionTreeClassifier(), MLPClassifier(alpha=1, max_iter=100), LinearSVC(random_state=0, tol=1e-5), sklearn.linear_model.LogisticRegression(), 
                     sklearn.ensemble.RandomForestClassifier(n_estimators=30, n_jobs=5)]
-    models=[tree.DecisionTreeClassifier()]
-    time_experiment = 50
+    #models=[tree.DecisionTreeClassifier()]
+    # Number of time the experiment are launch (nb of explanations)
+    time_experiment = 10
+    # The different discretization methods that are used
     x = ['kmeans', 'decile', 'quartile', 'entropy', 'MDLP']
 
     for c in models:
@@ -69,8 +78,8 @@ if experiment :
         print('model: ', bb_model)
         filename = "graph/" + dataset_name + "/" + bb_model + "/" + str(threshold) + "/"
         os.makedirs(os.path.dirname(filename), exist_ok=True)
-        c=tree.DecisionTreeClassifier()
         c.fit(train, labels_train)
+        # Compute black box labels for MDLP and entropy discretization methods
         black_box_labels = c.predict(train)
 
         model_time = []
@@ -90,16 +99,15 @@ if experiment :
                                                             discretizer=x[j], filename=filename)
             for i in range (time_experiment):
                 print("instance numéro :", i)
-
+                # Function that predicts the class for each instances from x
                 predict_fn = lambda x: c.predict(x)
+                # Compute the black box train and test accuracy
                 bbox_train = sklearn.metrics.accuracy_score(dataset.labels_train, predict_fn(dataset.train))
                 bbox_test = sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test))
-                print('Train', sklearn.metrics.accuracy_score(dataset.labels_train, predict_fn(dataset.train)))
-                print('Test', sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)))
+                print('Train', bbox_train)
+                print('Test', bbox_test)
 
                 idx = i
-                #idx = 1
-                #idx = 15
                 np.random.seed(1)
                 print("instance: ", dataset.test[idx].reshape(1, -1)[0])
                 #print('Prediction: ', explainer.class_names[predict_fn(dataset.test[idx].reshape(1, -1))[0]])
@@ -113,6 +121,7 @@ if experiment :
 
                 coverage_tab = None
                 precision_tab = None
+                # If the dataset is one of the 3 generated, pick the anchors informations and compute the coverage and precision on test dataset
                 if 'generate' in dataset_name:
                     anchors=exp.names()
                     _, _, pick_anchors_informations = generate(dataset.test[idx].reshape(1, -1)[0][0], dataset.test[idx].reshape(1, -1)[0][1], anchors, 
@@ -151,13 +160,16 @@ if experiment :
             mean_model_coverage.append(mean_coverage)
             mean_model_precision.append(mean_precision)
             mean_size_explanation.append(mean_size)
+            # Store the bins (value of the intervals) of the discretization model
             features = []
             for feature in explainer.disc.bins_size:
                 features.append(feature)
                 model_size_discretization.append(explainer.disc.bins_size[feature])
+            # Compute the number of bins for the discretization model
             if feature_discretize == []:
                 for feature in features:
                     feature_discretize.append(feature)
+            # Generates a graph representing all data points and the anchor 
             if 'generate' in dataset_name:
                 graph_data_generate = generate(dataset.test[idx].reshape(1, -1)[0][0], dataset.test[idx].reshape(1, -1)[0][1], anchors, blackbox=c, 
                                                 experiment=False, X= X, Y = Y)
@@ -171,6 +183,7 @@ if experiment :
         for i in range(len(mean_model_coverage)):
             mean_model_coverage_precision.append(2/(1/mean_model_coverage[i]+1/mean_model_precision[i]))
 
+        # Generates graphs for coverage, precision, F1, time and size of the explanations
         graph_coverage = baseGraph.BaseGraph(title="Results of discretization methods for coverage", y_label="coverage", 
                             model=bb_model, accuracy=sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)), 
                             dataset=dataset_name, threshold=threshold)
@@ -191,6 +204,7 @@ if experiment :
                             model=bb_model, accuracy=sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)), 
                             dataset=dataset_name, threshold=threshold)
         graph_size.show_size(model=x, mean_size=mean_size_explanation)
+        # Generates graphs for each discretized feature of the number of bins
         for i in range(len(feature_discretize)):
             size_discretization_feature = []
             for j in range(len(model_size_discretization)):
@@ -201,6 +215,7 @@ if experiment :
                             dataset=dataset_name, threshold=threshold)
             graph_size_discretization.show_size_discretization(model=x, size_discretization=size_discretization_feature, 
                             feature_discretization=feature_discretize[i])
+        # Function that writes in a csv file all the information that are necessary to reproduce the experiment
         graph_size.writer_in_csv(dataset_name=dataset_name, dataset_size=len(dataset.data), nb_feature=len(dataset.feature_names), bb_name=bb_model, 
                 bbox_train=bbox_train, bbox_test=bbox_test, precision=mean_model_precision, coverage=mean_model_coverage, 
                 coverage_precision=mean_model_coverage_precision, size=mean_size_explanation, time=model_time,
@@ -209,16 +224,17 @@ else:
     c=tree.DecisionTreeClassifier()
     c.fit(train, labels_train)
     black_box_labels = c.predict(train)
-    i = 0
+    i = 17
     explainer = anchor_tabular.AnchorTabularExplainer(dataset.class_names, dataset.feature_names, dataset.train, dataset.categorical_names,
                                                                 black_box_labels=black_box_labels,
-                                                                discretizer="MDLP")
+                                                                discretizer="kmeans")
     predict_fn = lambda x: c.predict(x)
+    """
     bbox_train = sklearn.metrics.accuracy_score(dataset.labels_train, predict_fn(dataset.train))
     bbox_test = sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test))
     print('Train', sklearn.metrics.accuracy_score(dataset.labels_train, predict_fn(dataset.train)))
     print('Test', sklearn.metrics.accuracy_score(dataset.labels_test, predict_fn(dataset.test)))
-
+    """
     idx = i
     np.random.seed(1)
     print("instance: ", dataset.test[idx].reshape(1, -1)[0])

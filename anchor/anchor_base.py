@@ -330,13 +330,17 @@ class AnchorBaseBeam(object):
         mean = labels.mean()
         beta = np.log(1. / delta)
         lb = AnchorBaseBeam.dlow_bernoulli(mean, beta / data.shape[0])
+        """
         while mean > desired_confidence and lb < desired_confidence - epsilon:
             nraw_data, ndata, nlabels = sample_fn([], batch_size)
+            print("data", data)
+            print("ndata", ndata)
             data = np.vstack((data, ndata))
             raw_data = np.vstack((raw_data, nraw_data))
             labels = np.hstack((labels, nlabels))
             mean = labels.mean()
             lb = AnchorBaseBeam.dlow_bernoulli(mean, beta / data.shape[0])
+        """
         if lb > desired_confidence:
             anchor['num_preds'] = data.shape[0]
             anchor['all_precision'] = mean

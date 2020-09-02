@@ -107,7 +107,8 @@ def load_dataset(dataset_name, balance=False, discretize=True, dataset_folder='.
             balance=balance, feature_transformations=transformations)
     
     elif dataset_name == 'titanic':
-        feature_names = ["PassengerId", "Pclass",  "First Name", "Last Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked", "Survived"]
+        feature_names = ["PassengerId", "Pclass",  "First Name", "Last Name", "Sex",
+                "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked", "Survived"]
         features_to_use = [1, 4, 5, 6, 7, 11]
         categorical_features = [1, 4, 6, 7, 11]
         
@@ -434,6 +435,9 @@ def perturb_sentence(text, present, n, neighbors, proba_change=0.5,
     return raw, data
 
 def return_pertinent_sentences(pertinent, raw_data, m):
+    """
+    Generates all the sentences generated during perturbation with add of the pertinent negative words
+    """
     pertinent_sentences = np.zeros((m, len(raw_data)), '|S80')
     for i, t in enumerate(raw_data):
         for j in range(m):
@@ -457,15 +461,22 @@ def generate_false_pertinent(text, present, m, neighbors, n_best_co_occurrence, 
                      forbidden=[], forbidden_tags=['PRP$'],
                      forbidden_words=['be'],
                      pos=['NOUN', 'VERB', 'ADJ', 'ADV', 'ADP', 'DET'], use_proba=True, generate_sentence=False):
-    # words is a list of words (must be unicode)
-    # present is which ones must be present, also a list
-    # m = how many to sample
-    # neighbors must be of utils.Neighbors
-    # nlp must be spacy
-    # proba_change is the probability of each word being different than before
-    # forbidden: forbidden lemmas
-    # forbidden_tags, words: self explanatory
-    # pos: which POS to change
+    """ 
+    Generates a matrix composed of sentence with the 'false pertinent' that represents words that frequently co occur
+    args:
+        present is which ones must be present, also a list
+        m = how many to sample
+        neighbors must be of utils.Neighbors
+        n_best_co_occurrence: The matrix of the n words that most frequently co occurs
+        nlp must be spacy
+        proba_change is the probability of each word being different than before
+        forbidden: forbidden lemmas
+        forbidden_tags, words: self explanatory
+        words is a list of words (must be unicode)
+        pos: which POS to change
+        generate_sentence: If set to True, return the sentence composed of all the pertinent negatifs words 
+    """
+    # Use of classical natural language processing
     tokens = neighbors.nlp(unicode(text))
     forbidden = set(forbidden)
     forbidden_tags = set(forbidden_tags)
@@ -490,9 +501,12 @@ def generate_false_pertinent(text, present, m, neighbors, n_best_co_occurrence, 
         """
         #t = t.decode('ascii')
         array_false_pertinent.append(t.encode('ascii'))
+        # gets the most frequent words associated with the target word t
         targets = co_occ.generate_bi_grams_words(t, n_best_co_occurrence)
+        # Put to 1 for all sentence generated at the position of the word from the target sentence
         pertinent = np.c_[pertinent, np.ones(m)]
         if targets != []:
+            # Add randomly a 1 in the matrix for (only) one of the most co occurent words 
             size_pertinents = len(targets)
             matrix_raw_false_pertinent = np.zeros((m, size_pertinents))
             for j, p in enumerate(targets):
@@ -505,6 +519,7 @@ def generate_false_pertinent(text, present, m, neighbors, n_best_co_occurrence, 
             np.random.shuffle(matrix_raw_false_pertinent)
             pertinent = np.c_[pertinent, matrix_raw_false_pertinent]
     if generate_sentence:
+        # generates a sentence composed of all the pertinent negatifs words inside the target sentence
         sentence_false_pertinent = ""
         for word in array_false_pertinent:
             sentence_false_pertinent += " " + word.decode()
@@ -518,5 +533,3 @@ def generate_false_pertinent(text, present, m, neighbors, n_best_co_occurrence, 
     """
     raw = return_pertinent_sentences(pertinent, array_false_pertinent, m)
     return pertinent, raw, array_false_pertinent
-    
-        

@@ -43,12 +43,17 @@ class AnchorText(object):
         self.neighbors = utils.Neighbors(self.nlp)
         self.use_unk_distribution = use_unk_distribution
         self.mask_string = mask_string
+        # Generates and store the co-ocurence matrix  
         co_occurence = co_occ.generate_co_occurence_matrix()
+        # Stores the n best words from the co-occurence matrix
         self.n_best_co_occurrence = co_occ.generate_n_best_co_occurrence(co_occurence)
 
     def get_sample_fn(self, text, classifier_fn, use_proba=False, pertinents_negatifs=False):
         true_label = classifier_fn([text])
         if pertinents_negatifs:
+            # Generates a new sentence based on the target added with the false pertinents words 
+            # i.e: target sentence = "This is a good book" sentence_false_pertinent = "This is a very good scientific book" 
+            # with 'very' and 'scientific' as false pertinents words
             sentence_false_pertinents  = utils.generate_false_pertinent(
                     text, [], 1, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba, generate_sentence=True)
             text_pertinent = sentence_false_pertinents
@@ -62,8 +67,12 @@ class AnchorText(object):
             # Positions in the sentence of the beginning of each word
             positions = [x.idx for x in processed]
 
-        def sample_fn(present, num_samples, compute_labels=True, pyTorch = False, pertinents_negatifs=False):
+        def sample_fn(present, num_samples, compute_labels=True, pyTorch=False, pertinents_negatifs=False):
+            # Generates 'num_samples' random sentences with presence or absence of certain words of the target sentence
+            # i.e: A matrix of 1 or 0 with 1 meaning presence of the words and 0 absence
             if self.use_unk_distribution:
+                # Replace absent words with a mask
+                # data corresponds to the matrix of 1 and 0 while raw represents the matrix of sentences
                 data = np.ones((num_samples, len(words)))
                 raw = np.zeros((num_samples, len(words)), '|S80')
                 raw[:] = words
@@ -81,14 +90,17 @@ class AnchorText(object):
                     raw_data = [' '.join(x) for x in raw]
             else:
                 if pertinents_negatifs:
+                    # Modify the target sentence with false pertinent words randomly present or missing
                     data, raw_data, sentence_false_pertinents  = utils.generate_false_pertinent(
                         text, present, num_samples, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba)
                 else:
+                    # Perturb the target sentence to replace missing words with word with similar meaning
                     raw_data, data = utils.perturb_sentence(
                         text, present, num_samples, self.neighbors, top_n=100,
                         use_proba=use_proba)
             labels = []
             if compute_labels and pyTorch:
+                # Compute labels with model using pyTorch
                 labels = (classifier_fn(raw_data) == true_label).int()
             elif compute_labels: 
                 labels = int((classifier_fn(raw_data) == true_label))
@@ -103,9 +115,11 @@ class AnchorText(object):
                           delta=0.1, tau=0.15, batch_size=100, use_proba=False,
                           beam_size=4, pertinents_negatifs=False,
                           **kwargs):
+        # words corresponds to the different words from the target sentence, positions to their positions in the sentence
+        # true_labels to the label predicted by the black box and sample_fn is the function generating the matrix of perturbed sentence
         words, positions, true_label, sample_fn = self.get_sample_fn(
             text, classifier_fn, use_proba=use_proba, pertinents_negatifs=pertinents_negatifs)
-        # print words, true_label
+        # Main function that find an anchor based on the matrix of perturbed sentence
         exp = anchor_base.AnchorBaseBeam.anchor_beam(
             sample_fn, delta=delta, epsilon=tau, batch_size=batch_size,
             desired_confidence=threshold, stop_on_first=True, pertinents_negatifs=pertinents_negatifs, **kwargs) 

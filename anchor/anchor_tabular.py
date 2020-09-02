@@ -82,7 +82,7 @@ class AnchorTabularExplainer(object):
                                                           self.feature_names, filename) 
               
         else:
-            raise ValueError('Discretizer must be quartile or decile')
+            raise ValueError('Discretizer must be quartile, decile, MDLP, entropy or kmeans')
 
         self.d_train = self.disc.discretize(self.train)
         val = self.disc.discretize(train_data)
