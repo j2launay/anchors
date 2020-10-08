@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+DecisionTreeClassifier,1.0,0.5166666666666667,0.95
+
+anchors precision
+,Replace all words: ,0.99
+,Use of mask word: ,1.0
+,Replace with pertinent negatif: ,0.99
+,Replace words and pertinent: ,0.95
+""
+anchors coverage
+,Replace all words: ,0.12
+,Use of mask word: ,0.5
+,Replace with pertinent negatif: ,0.66
+,Replace words and pertinent: ,0.04
+""
+anchors prec*coverage
+,Replace all words: ,0.22
+,Use of mask word: ,0.67
+,Replace with pertinent negatif: ,0.79
+,Replace words and pertinent: ,0.08
+""
+anchors size
+,Replace all words: ,1.3
+,Use of mask word: ,1.0
+,Replace with pertinent negatif: ,1.2
+,Replace words and pertinent: ,7.6
+""
+time to compute anchors
+,Replace all words: ,176.75
+,Use of mask word: ,4.41
+,Replace with pertinent negatif: ,54.74
+,Replace words and pertinent: ,1116.54
+""
+dataset name,dataset size,Number of instances running
+bert_models,180,10

@@ -1,0 +1,27 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+Anchor: ['of']
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positive
+
+"honest of the time , really , another is this unbelievably molecular drive
+little of those place , somewhat , this is some surprisingly cinematic ride
+important of these mistake , too , that is this laughably extraordinary tow
+nice of the hell , necessarily , this is that refreshingly dystopian journey
+strong of some reality , probably , that is the deceptively contemporary passenger
+slow of both end , never , another is the subtly mysterious rafting
+extra of another difference , soon , this is an masterfully witty wagon
+big of the approach , seriously , that is an wonderfully classic detour
+glad of that reality , kind , another is any pleasantly witty wagon
+similar of the reality , just , each is another predictably postmodern journey"
+
+Examples where anchor applies and model predicts :negative
+
+"bad of an hell , now , those is every perfectly seminal weekend
+bad of that advantage , else , any is an wonderfully classic bike
+wrong of an nothing , so , another is an powerfully theatrical detour
+terrible of an anything , apparently , each is an impressively satirical motorcycle
+impressed of those place , nowhere , any is an aesthetically poignant day
+own of those bit , admittedly , another is an profoundly brilliant time"

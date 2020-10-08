@@ -95,6 +95,7 @@ and only_same_prediction at the same time')
         idx = partial_index if partial_index is not None else size - 1
         if idx < 0 or idx > size:
             return []
+        #print ("TEST ", self.exp_map['examples'])
         return self.exp_map['examples'][idx][key]
 
     def as_html(self, **kwargs):

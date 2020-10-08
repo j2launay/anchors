@@ -1,0 +1,35 @@
+black box type,black box train accuracy,black box test accuracy,anchor precision threshold
+LogisticRegression,1.0,0.6,0.95
+
+anchors precision
+,Replace all words: ,0.98
+,Use of mask word: ,1.0
+,Replace with pertinent negatif: ,0.99
+,Replace words and pertinent: ,0.92
+""
+anchors coverage
+,Replace all words: ,0.12
+,Use of mask word: ,0.45
+,Replace with pertinent negatif: ,0.4
+,Replace words and pertinent: ,0.1
+""
+anchors prec*coverage
+,Replace all words: ,0.21
+,Use of mask word: ,0.62
+,Replace with pertinent negatif: ,0.57
+,Replace words and pertinent: ,0.18
+""
+anchors size
+,Replace all words: ,1.5
+,Use of mask word: ,1.2
+,Replace with pertinent negatif: ,3.1
+,Replace words and pertinent: ,3.1
+""
+time to compute anchors
+,Replace all words: ,179.28
+,Use of mask word: ,4.45
+,Replace with pertinent negatif: ,103.11
+,Replace words and pertinent: ,478.51
+""
+dataset name,dataset size,Number of instances running
+bert_models,180,10

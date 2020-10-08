@@ -49,10 +49,14 @@ def safe_str(obj):
 
 # Function to predict class for a text "texts"        
 def predict_lr(texts):
+    if len(texts) > 1:
+        return model.predict(vectorizer.transform(texts))
     return int(model.predict(vectorizer.transform(texts))[0])
 
 # Function to predict class for a text with Bert model 
 def predict_bert(texts):
+    if len(texts) > 100:
+        return predicts_bert(texts)
     model = tuner(texts,'lime-tuner/distilBert_model.pkl', class_names)
     predict_result = utilities.JsonToArray(model.get_Prediction())[0]
     return np.argmax(predict_result)
@@ -100,9 +104,11 @@ def print_text_explanation(predict, text, exp):
 
 # Parameter representing the dataset. There is three possibilities : 'polarity', 'tweet' and 'bert'
 dataset = 'polarity'
+#Name: 0, Length: 120, dtype: object
+size_batch_bert = 40
 if dataset == 'polarity':
     # dataset from http://www.cs.cornell.edu/people/pabo/movie-review-data/
-    def load_polarity(path='/home/julien/Documents/stage/anchor/datasets/rt-polaritydata/rt-polaritydata'):
+    def load_polarity(path='/Users/jdelauna/Documents/anchors/datasets/rt-polaritydata/rt-polaritydata'):
         data = []
         labels = []
         f_names = ['rt-polarity.neg', 'rt-polarity.pos']
@@ -118,7 +124,7 @@ if dataset == 'polarity':
 
     # Separate data into train, validation and test sets
     data, labels = load_polarity()
-    class_names = ['positif', 'negatif']
+    class_names = ['negatif', 'positif']
     size_data = len(labels)
     train, test, train_labels, test_labels = sklearn.model_selection.train_test_split(data, labels, test_size=.9, random_state=42)
     train, val, train_labels, val_labels = sklearn.model_selection.train_test_split(train, train_labels, test_size=.1, random_state=42)
@@ -134,19 +140,19 @@ elif dataset == 'tweet':
     train, val, train_labels, val_labels = sklearn.model_selection.train_test_split(train, train_labels, test_size=.2, random_state=42)
     size_data = len(train_labels) + len(test_labels)
 
-elif dataset == 'bert':
+elif 'bert' in dataset:
     class_names = ['negative',  'positive']
     df = pd.read_csv('https://github.com/clairett/pytorch-sentiment-classification/raw/master/data/SST2/train.tsv', delimiter='\t', header=None)
     # Number of sentance examples on which the bert model is trained on the train set (limited since the model takes time)
-    batch_1 = df[:40]
+    batch_1 = df[:size_batch_bert]
     train_vectors = batch_1[0]
-    train = train_vectors
+    train_bert = train_vectors
     train_labels = batch_1[1]
     df = pd.read_csv('https://github.com/clairett/pytorch-sentiment-classification/raw/master/data/SST2/test.tsv', delimiter='\t', header=None)
     # Number of sentance examples on which the bert model is trained on the test set (limited since the model takes time)
-    batch_2 = df[:20]
+    batch_2 = df[:int(size_batch_bert/2)]
     test_vectors = batch_2[0]
-    test = test_vectors
+    test_bert = test_vectors
     test_labels = batch_2[1]
     size_data = len(train_labels) + len(test_labels)
 
@@ -157,6 +163,19 @@ if dataset != 'bert':
     train_vectors = vectorizer.transform(train)
     test_vectors = vectorizer.transform(test)
     #val_vectors = vectorizer.transform(val)
+    safe_str_bert = []
+    for i in train:
+        safe_str_bert.append(safe_str(i))
+    train_bert = pd.DataFrame (safe_str_bert)
+    batch = train_bert[:120]
+    train_bert = batch[0]
+    safe_str_bert = []
+    for i in test:
+        safe_str_bert.append(safe_str(i))
+    test_bert = pd.DataFrame (safe_str_bert)
+    batch = test_bert[:60]
+    test_bert = batch[0]
+    #test_bert = pd.DataFrame (test, columns=['sentences'])
 
 # spanish language can only work with tweet dataset
 # french language doesn't work (for the moment eheh)
@@ -175,7 +194,8 @@ if language == 'french':
     exp = explainer.explain_instance(text, ps.predictFrench, threshold=0.95, use_proba=False)
 
 elif language == 'english':
-    nlp = spacy.load('/home/julien/Documents/stage/anchor/datasets/en_core_web_lg-2.2.5/en_core_web_lg/en_core_web_lg-2.2.5')
+    nlp = spacy.load('/Users/jdelauna/Documents/anchors/datasets/en_core_web_lg-2.2.5/en_core_web_lg/en_core_web_lg-2.2.5')
+    #nlp = spacy.load('en_core_web_lg')
     if dataset == 'tweet':
         print("emojis possibles : ", load_tweets.transform_emoji())
 
@@ -184,18 +204,19 @@ elif language == 'spanish':
     text = "La magia son personas. Nada es imposible. en Teatro Rialto"
 
 # All the possible models that are used to test and compute explanations
-models_all = [sklearn.linear_model.LogisticRegression(), sklearn.ensemble.RandomForestClassifier(n_estimators=2, n_jobs=10),
+models_all = [tuner(train_bert[7],'lime-tuner/distilBert_model.pkl', class_names), sklearn.linear_model.LogisticRegression(), sklearn.ensemble.RandomForestClassifier(n_estimators=2, n_jobs=10),
         MultinomialNB(alpha=0.1), MLPClassifier(alpha=1, max_iter=100), 
         tree.DecisionTreeClassifier(), LinearSVC(random_state=0, tol=1e-5)]
-models = [tuner(train[7],'lime-tuner/distilBert_model.pkl', class_names)] if dataset=='bert' else models_all
+#models_all = [sklearn.linear_model.LogisticRegression(), tree.DecisionTreeClassifier()]
+models = [tuner(train_bert[7],'lime-tuner/distilBert_model.pkl', class_names)] if dataset=='bert' else models_all
 # Parameter used to compute the bert model or the "classic models"
 bert = dataset=='bert'
 # Parameter that enables (or not) to launch "time_experiment" times the experiments 
-experiment = False
+experiment = True
 mask_word_boolean = [False, True]
-mask_word_boolean_text = ['Replace all words', 'Use of mask word', 'Replace with pertinent negatif']
+mask_word_boolean_text = ['Replace all words', 'Use of mask word', 'Replace with pertinent negatif', 'Replace words and pertinent']
 # Minimum threshold precision for a sufficiant anchor
-threshold=0.2
+threshold=0.95
 if experiment:
     for model in models:
         bb_model = type(model).__name__
@@ -203,15 +224,15 @@ if experiment:
         filename = "graph/" + dataset + "/" + bb_model + "/" + str(threshold) + "/"
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         # Compute the test and train accuracy of the black box model
-        if dataset != 'bert':
+        if bb_model != 'tuner':
             model.fit(train_vectors, train_labels)
             train_preds = model.predict(train_vectors)
             test_preds = model.predict(test_vectors)
         else:
-            train_preds = predicts_bert(train_vectors)
-            test_preds = predicts_bert(test_vectors)
-        train_accuracy = sklearn.metrics.accuracy_score(train_labels, train_preds)
-        test_accuracy = sklearn.metrics.accuracy_score(test_labels, test_preds)
+            train_preds = predicts_bert(train_bert)
+            test_preds = predicts_bert(test_bert)
+        train_accuracy = sklearn.metrics.accuracy_score(train_labels[:len(train_preds)], train_preds)
+        test_accuracy = sklearn.metrics.accuracy_score(test_labels[:len(test_preds)], test_preds)
         print('Val accuracy', test_accuracy)
 
         # Number of times the experiment are launch (i.e: number of text that are explained by anchor)
@@ -227,17 +248,24 @@ if experiment:
                 print("Use of mask word: ", mask_word_boolean[j])
                 explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=mask_word_boolean[j])
             else:
-                print("Use of pertinent negatif")
+                print("Use of pertinent negatif") if j == 2 else print("Use of pertinent negatif and replace words ")
                 explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=False)
             mean_precision = 0
             mean_coverage = 0
             mean_size = 0
-            for i in range (time_experiment):
-                print("instance number :", i)
-                text = safe_str(test[i])
+            counter = 0
+            number_sentences = 0
+            while number_sentences < time_experiment:
+            #for i in range (time_experiment):
+                counter += 1
+                text = safe_str(test[counter]) if bb_model != 'tuner' else safe_str(test_bert[counter])
+                if len (text) > 60 :
+                    continue
+                number_sentences += 1
+                print("instance number :", number_sentences)
                 print(text)
                 # compute the class prediction for the text from the black box model  
-                if dataset != 'bert':
+                if bb_model != 'tuner':
                     pred = class_names[predict_lr([text])]
                     alternative =  class_names[1 - predict_lr([text])]
                 else:
@@ -245,15 +273,21 @@ if experiment:
                     alternative =  class_names[1 - predict_bert([text])]
                 print("prediction : ", pred)
                 if j < len(mask_word_boolean):
-                    if dataset != 'bert':
+                    if bb_model != 'tuner':
                         exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True)
                     else:
                         exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True)
                 else:
-                    if dataset != 'bert':
-                        exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs=True)
+                    if j == 2:  
+                        if bb_model != 'tuner':
+                            exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs=True)
+                        else:
+                            exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True, pertinents_negatifs=True)
                     else:
-                        exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True, pertinents_negatifs=True)
+                        if bb_model != 'tuner':
+                            exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs_replace=True)
+                        else:
+                            exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True, pertinents_negatifs_replace=True)
                 mean_coverage = mean_coverage + exp.coverage()
                 mean_precision = mean_precision + exp.precision()
                 mean_size = mean_size + len(exp.features())
@@ -270,8 +304,8 @@ if experiment:
         print("mean coverage", mean_model_coverage)
         print("mean precision", mean_model_precision)
         mean_model_coverage_precision = []
-        for i in range(len(mean_model_coverage)):
-            mean_model_coverage_precision.append(2/(1/mean_model_coverage[i]+1/mean_model_precision[i]))
+        for counter in range(len(mean_model_coverage)):
+            mean_model_coverage_precision.append(2/(1/mean_model_coverage[counter]+1/mean_model_precision[counter]))
 
         # Generates graphs for coverage, precision, F1, time and size of the explanation
         graph_coverage = baseGraph.BaseGraph(title="Difference of coverage for mask words", y_label="coverage", 
@@ -310,11 +344,12 @@ elif bert:
     
     #instances = [0, 50, 275, 350, 500, 623, 891, 1002, 1502, 1768]
     # Instances that are explained
-    instances = [5, 6, 7]
+    instances = [0, 1, 2]
 
     filename = "graph/bert/" + str(threshold) + "/"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     # Compute accuracy on test and train dataset
+    pred = predict_bert(batch_1[0][5])
     preds = predicts_bert(train_vectors)
     train_accuracy = sklearn.metrics.accuracy_score(train_labels, preds)
     preds = predicts_bert(test_vectors)
@@ -323,25 +358,36 @@ elif bert:
 
     # Compute explanation for each instance 
     explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=False)
-    for idx in instances :
-        print('Computing explanations and curves for instance #', str(idx))
-        text = batch_1[0][idx]
+    if experiment:
+        for idx in instances :
+            print('Computing explanations and curves for instance #', str(idx))
+            text = batch_1[0][idx]
+            print('text :', text)
+            exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True)
+            print_text_explanation(predict_bert, text, exp)
+    else:
+        text = "This is a good book."
         exp = explainer.explain_instance(text, predict_bert, threshold=threshold, use_proba=True)
-        print_text_explanation(predict_bert, text, exp)
+        print_text_explanation(predicts_bert, text, exp)
+        
 
 else:
     #model = tree.DecisionTreeClassifier()
     model = models[0]
     model.fit(train_vectors, train_labels)
-
-    for j in range (len(mask_word_boolean) + 1):
-        explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=mask_word_boolean[j%2])
-        print("Use of mask word : ", mask_word_boolean[j%2])
+    mask = True
+    for j in range (len(mask_word_boolean) + 2):            
+        explainer = anchor_text.AnchorText(nlp, class_names, use_unk_distribution=mask)
+        print("Use of mask word : ", mask)
+        mask = False
         print("model: ", type(model).__name__)
+        print("dataset: ", dataset)
         #text = safe_str(test[0])
-        text = "They are good movies"
+        text = "They seems movies"
         print("text ", text)
         pertinents_negatifs = (j == 2)
+        pertinents_negatifs_replace = (j == 3)
         print("Use of pertinent negatifs ", pertinents_negatifs)
-        exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs=pertinents_negatifs)
+        print("Use of pertinent negatifs and replace words ", pertinents_negatifs_replace)
+        exp = explainer.explain_instance(text, predict_lr, threshold=threshold, use_proba=True, pertinents_negatifs_replace=pertinents_negatifs_replace)
         print_text_explanation(predict_lr, text, exp)

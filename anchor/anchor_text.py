@@ -48,7 +48,7 @@ class AnchorText(object):
         # Stores the n best words from the co-occurence matrix
         self.n_best_co_occurrence = co_occ.generate_n_best_co_occurrence(co_occurence)
 
-    def get_sample_fn(self, text, classifier_fn, use_proba=False, pertinents_negatifs=False):
+    def get_sample_fn(self, text, classifier_fn, use_proba=False, pertinents_negatifs=False, pertinents_negatifs_replace=False):
         true_label = classifier_fn([text])
         if pertinents_negatifs:
             # Generates a new sentence based on the target added with the false pertinents words 
@@ -61,13 +61,24 @@ class AnchorText(object):
             words = [x.text for x in processed]
             # Positions in the sentence of the beginning of each word
             positions = [x.idx for x in processed]
+        elif pertinents_negatifs_replace:
+            # Generates a new sentence based on the target added with the false pertinents words 
+            # i.e: target sentence = "This is a good book" sentence_false_pertinent = "This is a very good scientific book" 
+            # with 'very' and 'scientific' as false pertinents words
+            sentence_false_pertinents_replace  = utils.generate_false_pertinents_replace(
+                    text, [], 1, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba, generate_sentence=True)
+            text_pertinent = sentence_false_pertinents_replace
+            processed = self.nlp(unicode(text_pertinent))
+            words = [x.text for x in processed]
+            # Positions in the sentence of the beginning of each word
+            positions = [x.idx for x in processed]
         else:
             processed = self.nlp(unicode(text))
             words = [x.text for x in processed]
             # Positions in the sentence of the beginning of each word
             positions = [x.idx for x in processed]
 
-        def sample_fn(present, num_samples, compute_labels=True, pyTorch=False, pertinents_negatifs=False):
+        def sample_fn(present, num_samples, compute_labels=True, pyTorch=False, pertinents_negatifs=False, pertinents_negatifs_replace=False):
             # Generates 'num_samples' random sentences with presence or absence of certain words of the target sentence
             # i.e: A matrix of 1 or 0 with 1 meaning presence of the words and 0 absence
             if self.use_unk_distribution:
@@ -93,37 +104,54 @@ class AnchorText(object):
                     # Modify the target sentence with false pertinent words randomly present or missing
                     data, raw_data, sentence_false_pertinents  = utils.generate_false_pertinent(
                         text, present, num_samples, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba)
+                elif pertinents_negatifs_replace:
+                    data, raw_data, sentence_false_pertinents  = utils.generate_false_pertinents_replace(
+                        text, present, num_samples, self.neighbors, self.n_best_co_occurrence, use_proba=use_proba)
                 else:
                     # Perturb the target sentence to replace missing words with word with similar meaning
                     raw_data, data = utils.perturb_sentence(
                         text, present, num_samples, self.neighbors, top_n=100,
                         use_proba=use_proba)
             labels = []
+            if true_label == 1:
+                true_labels = np.ones(num_samples)
+            else:
+                true_labels = np.zeros(num_samples)
+            compute_label = classifier_fn(raw_data)
+
             if compute_labels and pyTorch:
                 # Compute labels with model using pyTorch
                 labels = (classifier_fn(raw_data) == true_label).int()
             elif compute_labels: 
-                labels = int((classifier_fn(raw_data) == true_label))
+                labels = compute_label == true_labels
+                #labels = int((classifier_fn(raw_data) == true_label))
             labels = np.array(labels)
             raw_data = np.array(raw_data).reshape(-1, 1)
-            if pertinents_negatifs and not self.use_unk_distribution:
+            if pertinents_negatifs or pertinents_negatifs_replace and not self.use_unk_distribution:
                 return raw_data, data, labels, sentence_false_pertinents
             return raw_data, data, labels
         return words, positions, true_label, sample_fn
 
     def explain_instance(self, text, classifier_fn, threshold=0.95,
                           delta=0.1, tau=0.15, batch_size=100, use_proba=False,
-                          beam_size=4, pertinents_negatifs=False,
+                          beam_size=4, pertinents_negatifs=False, pertinents_negatifs_replace=False,
                           **kwargs):
         # words corresponds to the different words from the target sentence, positions to their positions in the sentence
         # true_labels to the label predicted by the black box and sample_fn is the function generating the matrix of perturbed sentence
         words, positions, true_label, sample_fn = self.get_sample_fn(
-            text, classifier_fn, use_proba=use_proba, pertinents_negatifs=pertinents_negatifs)
+            text, classifier_fn, use_proba=use_proba, pertinents_negatifs=pertinents_negatifs, 
+            pertinents_negatifs_replace=pertinents_negatifs_replace)
         # Main function that find an anchor based on the matrix of perturbed sentence
         exp = anchor_base.AnchorBaseBeam.anchor_beam(
             sample_fn, delta=delta, epsilon=tau, batch_size=batch_size,
-            desired_confidence=threshold, stop_on_first=True, pertinents_negatifs=pertinents_negatifs, **kwargs) 
-        exp['names'] = [words[x] for x in exp['feature']]
+            desired_confidence=threshold, stop_on_first=True, pertinents_negatifs=pertinents_negatifs, 
+            pertinents_negatifs_replace=pertinents_negatifs_replace, **kwargs) 
+        if pertinents_negatifs:
+            exp['names'] = ['not ' + words[x] for x in exp['feature']]
+        elif pertinents_negatifs_replace:
+            exp['names'] = ['not ' + words[x] for x in exp['feature']]
+        else: 
+            exp['names'] = [words[x] for x in exp['feature']]
         exp['positions'] = [positions[x] for x in exp['feature']]
         exp['instance'] = text
         exp['prediction'] = true_label

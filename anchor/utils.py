@@ -393,7 +393,8 @@ def perturb_sentence(text, present, n, neighbors, proba_change=0.5,
     pos = set(pos)
     raw = np.zeros((n, len(tokens)), '|S80')
     data = np.ones((n, len(tokens)))
-    raw[:] = [x.text for x in tokens] # This line replace all element in the array raw to get the value of the sentence
+    raw[:] = [x.text for x in tokens] # This line replace all element in the array raw to get
+                                      # the value of the sentence
     for i, t in enumerate(tokens):
         if i in present:
             continue
@@ -532,4 +533,134 @@ def generate_false_pertinent(text, present, m, neighbors, n_best_co_occurrence, 
         sentence_false_pertinent = [' '.join(x) for x in sentence_false_pertinent]
     """
     raw = return_pertinent_sentences(pertinent, array_false_pertinent, m)
+    return pertinent, raw, array_false_pertinent
+
+def return_pertinent_sentences_replace(pertinent, raw_data, m, raw, array_replace_words):
+    """
+    Generates all the sentences generated during perturbation with add of the pertinent negative words
+    """
+    pertinent_sentences = np.zeros((m, len(raw_data)), '|S80')
+    counter = 0
+    for i, t in enumerate(raw_data):
+        if i in array_replace_words:
+            pertinent_sentences[:, i] = raw[:,counter]
+            counter += 1
+        else :
+            for j in range(m):
+                if pertinent[j][i] == 1:
+                    pertinent_sentences[j][i] = t
+                else:
+                    pertinent_sentences[j][i] = ""
+    if (sys.version_info > (3, 0)):
+        raw = []
+        for x in pertinent_sentences:
+            text = " "
+            for y in x:
+                if y.decode():
+                    text+= " " + ' '.join([y.decode()])
+            raw.append(text)
+    else:
+        raw = [' '.join(x) for x in pertinent_sentences]
+    return raw
+
+def generate_false_pertinents_replace(text, present, m, neighbors, n_best_co_occurrence, proba_change=0.5,
+                     forbidden=[], forbidden_tags=['PRP$'],
+                     forbidden_words=['be'], top_n=50, temperature=.4,
+                     pos=['NOUN', 'VERB', 'ADJ', 'ADV', 'ADP', 'DET'], use_proba=True, generate_sentence=False):
+    """ 
+    Generates a matrix composed of sentence with the 'false pertinent' that represents words that frequently co occur
+    args:
+        present is which ones must be present, also a list
+        m = how many to sample
+        neighbors must be of utils.Neighbors
+        n_best_co_occurrence: The matrix of the n words that most frequently co occurs
+        nlp must be spacy
+        proba_change is the probability of each word being different than before
+        forbidden: forbidden lemmas
+        forbidden_tags, words: self explanatory
+        words is a list of words (must be unicode)
+        pos: which POS to change
+        generate_sentence: If set to True, return the sentence composed of all the pertinent negatifs words 
+    """
+    # Use of classical natural language processing
+    tokens = neighbors.nlp(unicode(text))
+    forbidden = set(forbidden)
+    forbidden_tags = set(forbidden_tags)
+    forbidden_words = set(forbidden_words)
+    pos = set(pos)
+    sentence = []
+    for x in tokens:
+        sentence.append(x.text)  
+    pertinent = np.zeros(m)
+    array_false_pertinent = []
+    raw = np.zeros((m, len(tokens)), '|S80')
+    data = np.ones((m, len(tokens)))
+    raw[:] = [x.text for x in tokens]
+    array_replace_words = []
+    counter = 0
+    for i, t in enumerate(tokens):
+        """if i in present:
+            array_false_pertinent.append(t.text.encode('ascii'))
+            pertinent = np.c_[pertinent, raw[:, i]]
+            continue
+        """
+        if (t.text not in forbidden_words and t.pos_ in pos and
+                t.lemma_ not in forbidden and t.tag_ not in forbidden_tags):
+            # Returns words that have the same tag (i.e: Nouns, adj, etc...) 
+            # among the 500 words that are most similar to the word in entry
+            r_neighbors = [
+                (unicode(x[0].text.encode('utf-8'), errors='ignore'), x[1])
+                for x in neighbors.neighbors(t.text)
+                if x[0].tag_ == t.tag_][:top_n]
+            if not r_neighbors:
+                continue
+            t_neighbors = [x[0] for x in r_neighbors]
+            weights = np.array([x[1] for x in r_neighbors])
+            if use_proba:
+                weights = weights ** (1. / temperature)
+                weights = weights / sum(weights)
+                # print sorted(zip(t_neighbors, weights), key=lambda x:x[1], reverse=True)[:10]
+                raw[:, i] = np.random.choice(t_neighbors, m,  p=weights,
+                                             replace=True)
+                # The type of data in raw is byte.
+                data[:, i] = raw[:, i] == t.text.encode()
+            else:
+                n_changed = np.random.binomial(m, proba_change)
+                changed = np.random.choice(m, n_changed, replace=False)
+                if t.text in t_neighbors:
+                    idx = t_neighbors.index(t.text)
+                    weights[idx] = 0
+                weights = weights / sum(weights)
+                raw[changed, i] = np.random.choice(t_neighbors, n_changed, p=weights)
+                data[changed, i] = 0
+        #t = t.decode('ascii')
+        array_false_pertinent.append(t.text.encode('ascii'))
+        # gets the most frequent words associated with the target word t
+        targets = co_occ.generate_bi_grams_words(t.text, n_best_co_occurrence)
+        # Put to 1 for all sentence generated at the position of the word from the target sentence
+        # pertinent = np.c_[pertinent, np.ones(m)]
+        pertinent = np.c_[pertinent, data[:,i]]
+        array_replace_words.append(counter)
+        counter += len(targets) + 1
+        if targets != []:
+            # Add randomly a 1 in the matrix for (only) one of the most co occurent words 
+            size_pertinents = len(targets)
+            matrix_raw_false_pertinent = np.zeros((m, size_pertinents))
+            for j, p in enumerate(targets):
+                array_false_pertinent.append(p.encode('ascii'))
+            k = 0
+            for i in range(m):
+                matrix_raw_false_pertinent[i][k] = 1
+                k += 1
+                k = k % size_pertinents
+            np.random.shuffle(matrix_raw_false_pertinent)
+            pertinent = np.c_[pertinent, matrix_raw_false_pertinent]
+    if generate_sentence:
+        # generates a sentence composed of all the pertinent negatifs words inside the target sentence
+        sentence_false_pertinent = ""
+        for word in array_false_pertinent:
+            sentence_false_pertinent += " " + word.decode()
+        return sentence_false_pertinent
+    pertinent = np.delete(pertinent, 0, 1)  
+    raw = return_pertinent_sentences_replace(pertinent, array_false_pertinent, m, raw, array_replace_words)
     return pertinent, raw, array_false_pertinent

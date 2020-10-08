@@ -1,0 +1,22 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+Anchor: ['not along']
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positive
+
+"  much add of the way along , though comedy , this is a refreshingly novel jelinek ride 
+  much bit of the way around , though many , this is a refreshingly novel jelinek ride w
+  much offer of the way much , though even , this is a refreshingly novel jelinek ride a
+  much better of the way get , though film , this is a refreshingly novel rice ride wild
+  much without of the way much , though film , this is a refreshingly novel jelinek ride
+  much better of the way possible , though film , this is a refreshingly novel jelinek r
+  much time of the way new , though many , this is a refreshingly novel jelinek ride rol
+  much matter of the way tell , though comedy , this is a refreshingly novel rice ride a
+  much syrup of the way audience , though quite , this is a refreshingly novel jelinek r
+  much anyone of the way find , though even , this is a refreshingly novel rice ride alo"
+
+Examples where anchor applies and model predicts :negative
+
+""

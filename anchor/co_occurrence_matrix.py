@@ -6,6 +6,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.collocations import *
 from nltk.corpus import stopwords
 #nltk.download('stopwords')
+#nltk.download('wordnet')
 from nltk.tokenize import word_tokenize
 
 def generate_co_occurence_matrix(generateNew=False):
@@ -14,7 +15,7 @@ def generate_co_occurence_matrix(generateNew=False):
     args:
         generateNew: If set to True computes a new co occurence matrix, else load the one already generated
     """
-    path='/home/julien/Documents/stage/anchor/datasets/rt-polaritydata/rt-polaritydata'
+    path='/Users/jdelauna/Documents/anchors/datasets'
     text_cooccurrence = ""
     if generateNew:
         f_names = ['rt-polarity (copie).neg', 'rt-polarity (copie).pos']
@@ -74,7 +75,7 @@ def generate_bi_grams_words(target, n_best_co_occurrence, number_words=20):
     word = tokenizer.tokenize(word)
     # If the word is a stopword
     if len(word) == 0:
-        targets = [""]
+        targets = []
         #weights = [1]
         return targets#, weights
     elif len(word) == 1:

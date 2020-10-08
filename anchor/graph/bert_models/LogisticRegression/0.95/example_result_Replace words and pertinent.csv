@@ -1,0 +1,31 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+"Anchor: ['not find', 'not else']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positive
+
+"  interesting matter of the end make , yet comedy , all is another oddly provocative jelinek thrill wild
+  same better of that reason along , so film , this is an astonishingly compelling rice commute along
+  usual syrup of this anything audience , really even , both is that distinctly harrowing jelinek bicycle along
+  good offer of these point audience , anyway film , the is another strikingly paranormal rice ride along
+  interesting bit of any hope many , definitely quite , those is the suprisingly suspenseful jelinek car along
+  strong else of the doubt saying , again many , all is the strikingly satirical rice fun roller
+  strong else of the fact make , perhaps many , some is that downright psychological jelinek commuter along
+  considerable look of some anything tell , very many , any is another unusually fictional jelinek ride roller
+  little way of these everyone get , quite many , those is an distinctly poetic rice horse roller
+  impossible documentary of any something sort , latter comedy , each is any undeniably fascinating jelinek road along"
+
+Examples where anchor applies and model predicts :negative
+
+"  concerned anyone of those place audience , even many , both is an strikingly masterful rice track roller
+  important bit of another something many , too many , any is any frighteningly short jelinek tow roller
+  whole anything of that end go , definitely quite , that is an uniquely comedic jelinek pony wild
+  wrong funnier of an change many , sadly quite , another is an decidedly intriguing rice ride along
+  other pretty of any doubt around , anyway many , the is an refreshingly paranormal jelinek saddle wild
+  awful fun of these reason sort , much even , an is an frighteningly fantastical jelinek commute along
+  decent else of each world go , hardly many , an is any fantastically compelling jelinek wheel roller
+  similar far of an future work , however even , some is an frighteningly riveting rice trail along
+  own anyone of an idea get , sadly many , an is both deliciously captivating jelinek scooter roller
+  aware better of the thing find , definitely even , that is every oddly fascinating rice excursion roller"

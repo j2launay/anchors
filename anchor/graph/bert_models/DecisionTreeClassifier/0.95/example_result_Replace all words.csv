@@ -1,0 +1,24 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+"Anchor: ['a', 'the', 'this']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positive
+
+"different before the someone , obviously , this is a refreshingly comedic c
+aware on the lot , surely , this is a undeniably lyrical cycling
+amazing of the matter , almost , this is a strangely new night
+many of the reality , exactly , this is a stunningly extraordinary morning
+usual beyond the time , hopefully , this is a oddly exciting trekking
+impressed within the step , instead , this is a astoundingly brilliant stro
+true as the time , somehow , this is a suprisingly fictional passenger
+particular between the problem , even , this is a admittedly episodic trail
+afraid about the stuff , necessarily , this is a stylistically suspenseful 
+such because the understanding , frankly , this is a overtly captivating bi"
+
+Examples where anchor applies and model predicts :negative
+
+"little like the way , even , this is a depressingly erotic wheel
+little past the nobody , later , this is a fantastically gritty adventure
+little past the end , actually , this is a eerily quirky boat"

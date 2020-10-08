@@ -1,0 +1,31 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+"Anchor: ['not a', 'not ,', 'not this', 'not novel', 'not quite', 'not around', 'not though', 'not of', 'not documentary', 'not really', 'not comedy', 'not much', 'not rice', 'not else', 'not many', 'not along', 'not make', 'not bit', 'not best', 'not funnier', 'not far', 'not ride', 'not even', 'not without', 'not like', 'not get', 'not way', 'not ,', 'not the', 'not is', 'not wild', 'not pretty', 'not time', 'not many', 'not find', 'not look', 'not along', 'not go', 'not syrup', 'not spend', 'not fun', 'not film', 'not much', 'not anything', 'not  ', 'not tell', 'not possible']"
+Precision: 1.0
+Coverage: 0.0
+
+Examples where anchor applies and model predicts :positive
+
+"  awful anyone than the trouble work , obviously quite , that is that surprisingly captivating rice drive r
+  certain way from the end sort , apparently comedy , any is the supremely fictional rice cycling roller
+  good add of some sense get , still film , every is another beautifully humorous jelinek bus wild
+  few look into those idea new , pretty many , all is this amazingly dystopian rice bike along
+  own without with those matter make , so quite , the is every astonishingly cinematic jelinek highway alon
+  good funnier with the stuff make , though film , the is another strikingly tragic jelinek hike wild
+  many like to any hell many , especially quite , these is every mildly evocative rice commuter along
+  nice like between the idea spend , actually many , this is that deceptively masterful jelinek seat roller
+  happy documentary past another fact many , however comedy , every is any extraordinarily suspenseful rice
+  obvious really to every trouble work , sometimes even , this is any classically brilliant jelinek commute"
+
+Examples where anchor applies and model predicts :negative
+
+"  many fun behind another sense make , quite many , an is every deceptively suspenseful jelinek drive rolle
+  little offer through those wonder tell , sadly many , that is that pleasantly humorous rice horseback wil
+  awful far on this someone best , probably many , another is an shockingly seminal jelinek thrill wild
+  own look toward each use funny , n't many , all is an refreshingly promising rice ride along
+  different offer along those anyone make , especially comedy , this is an disturbingly dramatic jelinek trail roller
+  expensive documentary through that anybody tell , there comedy , an is this brilliantly imaginative jelin
+  aware anything with this love go , definitely film , some is an gloriously intriguing rice wheel wild
+  many syrup of another doubt along , still comedy , an is another decidedly ambitious rice excursion rolle
+  important documentary with an moment long , again many , some is that bizarrely comic jelinek trip wild
+  afraid anything amongst an truth many , anyway even , all is another delightfully fascinating jelinek sea"

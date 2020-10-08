@@ -1,0 +1,22 @@
+"text: much of the way , though , this is a refreshingly novel ride"
+Prediction: positive
+Anchor: ['is']
+Precision: 1.0
+Coverage: 1.0
+
+Examples where anchor applies and model predicts :positive
+
+"UNK of the way UNK UNK UNK UNK is a refreshingly UNK ride
+UNK UNK UNK way UNK though UNK UNK is UNK UNK novel ride
+much UNK the way UNK though , UNK is a UNK novel ride
+much of the way UNK UNK UNK this is UNK UNK UNK UNK
+UNK UNK UNK way , though , UNK is a UNK novel UNK
+much of UNK UNK UNK UNK UNK this is a refreshingly novel 
+much UNK UNK UNK , UNK , UNK is a UNK novel UNK
+much UNK the way UNK though UNK this is UNK refreshingly 
+UNK UNK UNK UNK , UNK UNK UNK is a refreshingly UNK ride
+UNK UNK UNK way UNK though , UNK is a refreshingly novel "
+
+Examples where anchor applies and model predicts :negative
+
+""
