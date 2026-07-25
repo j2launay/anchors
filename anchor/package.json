@@ -33,7 +33,7 @@
     "flow-bin": "^0.324.0",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
-    "node-libs-browser": "^0.5.3",
+    "node-libs-browser": "^2.2.1",
     "style-loader": "^0.13.1",
     "webpack": "^5.109.0",
     "webpack-bundle-analyzer": "^3.6.0",
