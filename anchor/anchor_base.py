@@ -1,14 +1,31 @@
-"""Base anchor functions"""
+"""Core anchor beam search algorithm.
+
+This module implements the anchor beam search procedure that finds
+anchor explanations — minimal sets of feature predicates that
+"anchor" a model's prediction with high confidence.
+
+The main class AnchorBaseBeam implements the KL-LUCB bandit algorithm
+for efficient exploration of candidate anchors.
+"""
 from __future__ import print_function
-import numpy as np
-import operator
-import copy
-import sklearn
 import collections
+import copy
 import sys
+
+import numpy as np
+import sklearn
 
 
 def matrix_subset(matrix, n_samples):
+    """Return a random subset of rows from a matrix.
+
+    Args:
+        matrix: A 2-D numpy array.
+        n_samples: Maximum number of rows to sample.
+
+    Returns:
+        A numpy array containing at most n_samples randomly selected rows.
+    """
     if matrix.shape[0] == 0:
         return matrix
     n_samples = min(matrix.shape[0], n_samples)
@@ -16,11 +33,28 @@ def matrix_subset(matrix, n_samples):
 
 
 class AnchorBaseBeam(object):
+    """Anchor beam search algorithm using KL-LUCB bandits.
+
+    This class implements the core anchor-finding algorithm. It uses
+    beam search to explore combinations of feature predicates and
+    KL-LUCB (Lower and Upper Confidence Bound) to efficiently evaluate
+    candidate anchors with minimal samples.
+    """
+
     def __init__(self):
         pass
 
     @staticmethod
     def kl_bernoulli(p, q):
+        """Compute the KL divergence between two Bernoulli distributions.
+
+        Args:
+            p: Parameter of the first Bernoulli distribution.
+            q: Parameter of the second Bernoulli distribution.
+
+        Returns:
+            float: KL(Bernoulli(p) || Bernoulli(q)).
+        """
         p = min(0.9999999999999999, max(0.0000001, p))
         q = min(0.9999999999999999, max(0.0000001, q))
         return (p * np.log(float(p) / q) + (1 - p) *
@@ -28,11 +62,22 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def dup_bernoulli(p, level):
+        """Compute the upper confidence bound for a Bernoulli mean.
+
+        Uses binary search to find the largest q such that
+        KL(p, q) <= level.
+
+        Args:
+            p: Observed Bernoulli mean.
+            level: Confidence level parameter (beta / n_samples).
+
+        Returns:
+            float: Upper confidence bound on the true mean.
+        """
         lm = p
         um = min(min(1, p + np.sqrt(level / 2.)), 1)
         for j in range(1, 17):
             qm = (um + lm) / 2.
-    #         print 'lm', lm, 'qm', qm, kl_bernoulli(p, qm)
             if AnchorBaseBeam.kl_bernoulli(p, qm) > level:
                 um = qm
             else:
@@ -41,11 +86,22 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def dlow_bernoulli(p, level):
+        """Compute the lower confidence bound for a Bernoulli mean.
+
+        Uses binary search to find the smallest q such that
+        KL(p, q) <= level.
+
+        Args:
+            p: Observed Bernoulli mean.
+            level: Confidence level parameter (beta / n_samples).
+
+        Returns:
+            float: Lower confidence bound on the true mean.
+        """
         um = p
         lm = max(min(1, p - np.sqrt(level / 2.)), 0)
         for j in range(1, 17):
             qm = (um + lm) / 2.
-    #         print 'lm', lm, 'qm', qm, kl_bernoulli(p, qm)
             if AnchorBaseBeam.kl_bernoulli(p, qm) > level:
                 lm = qm
             else:
@@ -54,6 +110,16 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def compute_beta(n_features, t, delta):
+        """Compute the exploration parameter beta for the LUCB algorithm.
+
+        Args:
+            n_features: Number of candidate features/arms.
+            t: Current round number.
+            delta: Confidence parameter.
+
+        Returns:
+            float: Beta value for confidence bound computation.
+        """
         alpha = 1.1
         k = 405.5
         temp = np.log(k * n_features * (t ** alpha) / delta)
@@ -62,9 +128,27 @@ class AnchorBaseBeam(object):
     @staticmethod
     def lucb(sample_fns, initial_stats, epsilon, delta, batch_size, top_n,
              verbose=False, verbose_every=1):
-        # initial_stats must have n_samples, positive
+        """Run the KL-LUCB algorithm to identify the top-n arms.
+
+        Implements the Lower and Upper Confidence Bound algorithm
+        to find the top_n arms (candidate anchors) with highest
+        mean reward using adaptive sampling.
+
+        Args:
+            sample_fns: List of sampling functions, one per arm.
+            initial_stats: Dict with 'n_samples' and 'positives' lists.
+            epsilon: Tolerance parameter for stopping.
+            delta: Confidence parameter.
+            batch_size: Number of samples per evaluation round.
+            top_n: Number of top arms to identify.
+            verbose: If True, print progress information.
+            verbose_every: Print every N iterations when verbose.
+
+        Returns:
+            numpy array of indices of the top_n arms.
+        """
         n_features = len(sample_fns)
-        n_samples = np.array(initial_stats['n_samples']) # Information about the sentence (i.e: vector of coalition)
+        n_samples = np.array(initial_stats['n_samples'])
         positives = np.array(initial_stats['positives'])
         ub = np.zeros(n_samples.shape)
         lb = np.zeros(n_samples.shape)
@@ -115,7 +199,20 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def make_tuples(previous_best, state):
-        # alters state, computes support for new tuples
+        """Generate candidate anchor tuples by extending previous best.
+
+        Extends the best anchors from the previous beam search round
+        by adding one new feature at a time, computing coverage and
+        precision statistics for each new candidate.
+
+        Args:
+            previous_best: List of tuples representing the best anchors
+                from the previous round.
+            state: Dict containing search state (data, labels, coverage, etc.).
+
+        Returns:
+            List of new candidate anchor tuples.
+        """
         normalize_tuple = lambda x: tuple(sorted(set(x)))  # noqa
         all_features = range(state['n_features'])
         coverage_data = state['coverage_data']
@@ -127,12 +224,10 @@ class AnchorBaseBeam(object):
             tuples = [(x, ) for x in all_features]
             for x in tuples:
                 pres = data[:, x[0]].nonzero()[0]
-                # NEW
                 state['t_idx'][x] = set(pres)
                 state['t_nsamples'][x] = float(len(pres))
                 state['t_positives'][x] = float(labels[pres].sum())
                 state['t_order'][x].append(x[0])
-                # NEW
                 # Compute coverage based on the "presence" or absence of an index in column x from data
                 state['t_coverage_idx'][x] = set(
                     coverage_data[:, x[0]].nonzero()[0])
@@ -168,26 +263,33 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def make_tuples_negatifs(previous_best, state):
-        # alters state, computes support for new tuples
+        """Generate candidate tuples for pertinent negative search.
+
+        Similar to make_tuples but designed for pertinent negative
+        anchor generation. Extends previous best anchors by adding
+        one new feature at a time.
+
+        Args:
+            previous_best: List of tuples from the previous round.
+            state: Dict containing search state.
+
+        Returns:
+            List of new candidate anchor tuples.
+        """
         normalize_tuple = lambda x: tuple(sorted(set(x)))  # noqa
         all_features = range(state['n_features'])
         coverage_data = state['coverage_data']
         current_idx = state['current_idx']
         data = state['data'][:current_idx]
         labels = state['labels'][:current_idx]
-        # TODO add false pertinents and labels pertinents 
-        # if we want false pertinents at first
         if len(previous_best) == 0:
             tuples = [(x, ) for x in all_features]
             for x in tuples:
                 pres = data[:, x[0]].nonzero()[0]
-                # NEW
                 state['t_idx'][x] = set(pres)
                 state['t_nsamples'][x] = float(len(pres))
                 state['t_positives'][x] = float(labels[pres].sum())
                 state['t_order'][x].append(x[0])
-                # NEW
-                # Compute coverage based on the "presence" or absence of an index in column x from data
                 state['t_coverage_idx'][x] = set(
                     coverage_data[:, x[0]].nonzero()[0])
                 state['t_coverage'][x] = (
@@ -222,8 +324,23 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def get_sample_fns(sample_fn, tuples, state, negatif=False, negatif_replace=False):
-        # each sample fn returns number of positives
+        """Create sampling functions for each candidate anchor tuple.
+
+        Wraps the base sample_fn to track statistics for each candidate
+        anchor tuple during the beam search.
+
+        Args:
+            sample_fn: The base sampling function from the explainer.
+            tuples: List of candidate anchor tuples.
+            state: Dict containing search state.
+            negatif: If True, use pertinent negative sampling.
+            negatif_replace: If True, use pertinent negative with replacement.
+
+        Returns:
+            List of sampling closures, one per candidate tuple.
+        """
         sample_fns = []
+
         def complete_sample_fn(t, n):
             if negatif:
                 raw_data, data, labels, _ = sample_fn(list(t), n, pertinents_negatifs=negatif)
@@ -232,7 +349,6 @@ class AnchorBaseBeam(object):
             else:
                 raw_data, data, labels = sample_fn(list(t), n)
             current_idx = state['current_idx']
-            # idxs = range(state['data'].shape[0], state['data'].shape[0] + n)
             idxs = range(current_idx, current_idx + n)
             state['t_idx'][t].update(idxs)
             state['t_nsamples'][t] += n
@@ -254,10 +370,6 @@ class AnchorBaseBeam(object):
                 state['labels'] = np.hstack(
                     (state['labels'],
                      np.zeros(prealloc_size, labels.dtype)))
-            # This can be really slow
-            # state['data'] = np.vstack((state['data'], data))
-            # state['raw_data'] = np.vstack((state['raw_data'], raw_data))
-            # state['labels'] = np.hstack((state['labels'], labels))
             return labels.sum()
         for t in tuples:
             sample_fns.append(lambda n, t=t: complete_sample_fn(t, n))
@@ -266,6 +378,15 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def get_initial_statistics(tuples, state):
+        """Collect initial sampling statistics for candidate tuples.
+
+        Args:
+            tuples: List of candidate anchor tuples.
+            state: Dict containing search state.
+
+        Returns:
+            Dict with 'n_samples' and 'positives' lists for each tuple.
+        """
         stats = {
             'n_samples': [],
             'positives': []
@@ -277,7 +398,19 @@ class AnchorBaseBeam(object):
 
     @staticmethod
     def get_anchor_from_tuple(t, state):
-        # TODO: This is wrong, some of the intermediate anchors may not exist.
+        """Convert a winning tuple into a structured anchor explanation.
+
+        Builds the complete anchor explanation dictionary including
+        intermediate precision/coverage values and example instances.
+
+        Args:
+            t: The winning anchor tuple (sequence of feature indices).
+            state: Dict containing search state with all sampled data.
+
+        Returns:
+            Dict containing the anchor explanation with keys: feature,
+            mean, precision, coverage, examples, all_precision, num_preds.
+        """
         anchor = {'feature': [], 'mean': [], 'precision': [],
                   'coverage': [], 'examples': [], 'all_precision': 0}
         anchor['num_preds'] = state['data'].shape[0]
@@ -292,11 +425,11 @@ class AnchorBaseBeam(object):
             anchor['mean'].append(mean)
             anchor['precision'].append(mean)
             anchor['coverage'].append(state['t_coverage'][current_t])
-            # Store the id where the current_t features are present ? 
+            # Store the id where the current_t features are present
             raw_idx = list(state['t_idx'][current_t])
-            # Store all the sentences generated that have the current_t feature presents ?
+            # Store all the sentences generated that have the current_t feature presents
             raw_data = state['raw_data'][raw_idx]
-            # Store all the instances that have the current feature and a postif label predictions
+            # Store all the instances that have the current feature and a positive label prediction
             covered_true = (
                 state['raw_data'][raw_idx][state['labels'][raw_idx] == 1])
             covered_false = (
@@ -316,6 +449,36 @@ class AnchorBaseBeam(object):
                     verbose=False, epsilon_stop=0.05, min_samples_start=0,
                     max_anchor_size=None, verbose_every=1,
                     stop_on_first=False, pertinents_negatifs=False, pertinents_negatifs_replace=False, coverage_samples=10000):
+        """Run the anchor beam search algorithm.
+
+        This is the main entry point for finding anchor explanations.
+        It performs beam search over feature combinations, using the
+        KL-LUCB algorithm to efficiently evaluate each candidate.
+
+        Args:
+            sample_fn: Function that generates perturbed samples.
+                Signature: sample_fn(present, n, compute_labels=True) ->
+                (raw_data, data, labels).
+            delta: Confidence parameter (probability of error).
+            epsilon: Tolerance for the LUCB algorithm.
+            batch_size: Number of samples per evaluation batch.
+            min_shared_samples: Minimum samples shared across candidates.
+            desired_confidence: Target precision threshold.
+            beam_size: Width of the beam search.
+            verbose: If True, print progress information.
+            epsilon_stop: Tolerance for stopping condition.
+            min_samples_start: Minimum initial samples.
+            max_anchor_size: Maximum number of features in the anchor.
+            verbose_every: Print every N iterations when verbose.
+            stop_on_first: If True, stop at the first valid anchor found.
+            pertinents_negatifs: If True, use pertinent negative generation.
+            pertinents_negatifs_replace: If True, use replacement strategy.
+            coverage_samples: Number of samples for coverage estimation.
+
+        Returns:
+            Dict containing the anchor explanation with keys: feature,
+            mean, precision, coverage, examples, all_precision, num_preds.
+        """
         anchor = {'feature': [], 'mean': [], 'precision': [],
                   'coverage': [], 'examples': [], 'all_precision': 0}
         # Coverage data correspond to a matrix that map instances generated by sample_fn (of size coverage_samples)
@@ -326,9 +489,6 @@ class AnchorBaseBeam(object):
             _, coverage_data, _, _ = sample_fn([], coverage_samples, compute_labels=False, pertinents_negatifs_replace=pertinents_negatifs_replace)
         else:
             _, coverage_data, _ = sample_fn([], coverage_samples, compute_labels=False)
-        # raw_data => all the data
-        # data is like coverage_data upon
-        # labels is labels returned by sample_fn
         if pertinents_negatifs:
             raw_data, data, labels, _ = sample_fn([], max(1, min_samples_start), pertinents_negatifs=pertinents_negatifs)
         elif pertinents_negatifs_replace:
@@ -338,24 +498,13 @@ class AnchorBaseBeam(object):
         mean = labels.mean()
         beta = np.log(1. / delta)
         lb = AnchorBaseBeam.dlow_bernoulli(mean, beta / data.shape[0])
-        """
-        while mean > desired_confidence and lb < desired_confidence - epsilon:
-            nraw_data, ndata, nlabels = sample_fn([], batch_size)
-            print("data", data)
-            print("ndata", ndata)
-            data = np.vstack((data, ndata))
-            raw_data = np.vstack((raw_data, nraw_data))
-            labels = np.hstack((labels, nlabels))
-            mean = labels.mean()
-            lb = AnchorBaseBeam.dlow_bernoulli(mean, beta / data.shape[0])
-        """
         if lb > desired_confidence:
             anchor['num_preds'] = data.shape[0]
             anchor['all_precision'] = mean
             return anchor
         prealloc_size = batch_size * 10000
         current_idx = data.shape[0]
-        # Store and stack the data obtain previously with line or matrix of 0 of size equall to prealloc_size 
+        # Stack initial data with pre-allocated zero arrays
         data = np.vstack((data, np.zeros((prealloc_size, data.shape[1]),
                                          data.dtype)))
         raw_data = np.vstack(
@@ -385,7 +534,7 @@ class AnchorBaseBeam(object):
         if max_anchor_size is None:
             max_anchor_size = n_features
         while current_size <= max_anchor_size:
-            # Add to "state" informations about coverage and other informations and return tuples 
+            # Add to "state" informations about coverage and return tuples
             tuples = AnchorBaseBeam.make_tuples(
                 best_of_size[current_size - 1], state)
             # Check for indices in tuples that have only the best coverage
@@ -394,11 +543,10 @@ class AnchorBaseBeam(object):
             if len(tuples) == 0:
                 break
             sample_fns = AnchorBaseBeam.get_sample_fns(sample_fn, tuples,
-                                                       state, negatif=pertinents_negatifs, 
+                                                       state, negatif=pertinents_negatifs,
                                                        negatif_replace=pertinents_negatifs_replace)
             initial_stats = AnchorBaseBeam.get_initial_statistics(tuples,
                                                                   state)
-            #print (tuples, beam_size)
             chosen_tuples = AnchorBaseBeam.lucb(
                 sample_fns, initial_stats, epsilon, delta, batch_size,
                 min(beam_size, len(tuples)),
@@ -406,17 +554,10 @@ class AnchorBaseBeam(object):
             best_of_size[current_size] = [tuples[x] for x in chosen_tuples]
             if verbose:
                 print('Best of size ', current_size, ':')
-            # print state['data'].shape[0]
             stop_this = False
             for i, t in zip(chosen_tuples, best_of_size[current_size]):
-                # I can choose at most (beam_size - 1) tuples at each step,
-                # and there are at most n_feature steps
                 beta = np.log(1. /
                               (delta / (1 + (beam_size - 1) * n_features)))
-                # beta = np.log(1. / delta)
-                # if state['t_nsamples'][t] == 0:
-                #     mean = 1
-                # else:
                 mean = state['t_positives'][t] / state['t_nsamples'][t]
                 lb = AnchorBaseBeam.dlow_bernoulli(
                     mean, beta / state['t_nsamples'][t])
@@ -429,7 +570,6 @@ class AnchorBaseBeam(object):
                        lb < desired_confidence - epsilon_stop) or
                        (mean < desired_confidence and
                         ub >= desired_confidence + epsilon_stop)):
-                    # print mean, lb, state['t_nsamples'][t]
                     sample_fns[i](batch_size)
                     mean = state['t_positives'][t] / state['t_nsamples'][t]
                     lb = AnchorBaseBeam.dlow_bernoulli(
@@ -458,25 +598,13 @@ class AnchorBaseBeam(object):
             tuples = []
             for i in range(0, current_size):
                 tuples.extend(best_of_size[i])
-            # tuples = best_of_size[current_size - 1]
             sample_fns = AnchorBaseBeam.get_sample_fns(sample_fn, tuples,
                                                        state, negatif=pertinents_negatifs,
                                                        negatif_replace=pertinents_negatifs_replace)
             initial_stats = AnchorBaseBeam.get_initial_statistics(tuples,
                                                                   state)
-            # print tuples, beam_size
             chosen_tuples = AnchorBaseBeam.lucb(
                 sample_fns, initial_stats, epsilon, delta, batch_size,
                 1, verbose=verbose)
             best_tuple = tuples[chosen_tuples[0]]
-        # return best_tuple, state
         return AnchorBaseBeam.get_anchor_from_tuple(best_tuple, state)
-""" [b'They', b'seems', b'still', b'film', b'like', b'never', b'movie', b'movies', b'holiday', b'thornberrys', b'obviously', b'starring', b'plain', b'arnold', ...]
-20 : monster
-21 : horror
-22 : bond
-23 Entire
-24 horrible
-best tuples : (0, 2, 7, 21, 23)
-returned (6, 22, 1, -1, 20)
-"""

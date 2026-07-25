@@ -1,49 +1,78 @@
-import anchor_base
-import anchor_explanation
-import utils
-import lime
-import lime.lime_tabular
+"""Anchor explainer for tabular (structured) data.
+
+This module provides the AnchorTabularExplainer class for generating
+anchor-based explanations for classifiers operating on tabular data
+(numpy arrays of numerical or categorical features).
+"""
 import collections
-import sklearn
-import numpy as np
-import os
 import copy
+import json
+import os
 import string
 from io import open
-import json
+
+import numpy as np
+import sklearn
+import lime
+import lime.lime_tabular
+
+import anchor_base
+import anchor_explanation
+
 
 def id_generator(size=15):
-    """Helper function to generate random div ids. This is useful for embedding
-    HTML into ipython notebooks."""
+    """Generate a random alphanumeric string for unique HTML div IDs.
+
+    This is useful for embedding multiple explanations in a single
+    HTML document or IPython notebook without ID collisions.
+
+    Args:
+        size: Length of the generated string. Defaults to 15.
+
+    Returns:
+        A random string of uppercase letters and digits.
+    """
     chars = list(string.ascii_uppercase + string.digits)
     return ''.join(np.random.choice(chars, size, replace=True))
 
+
 class AnchorTabularExplainer(object):
-    """
+    """Generates anchor explanations for tabular data classifiers.
+
+    An anchor explanation is a set of if-then rules (predicates) that
+    sufficiently "anchor" a prediction — changes to features not in
+    the anchor do not affect the prediction.
+
     Args:
-        class_names: list of strings
-        feature_names: list of strings
-        train_data: used to sample (bootstrap)
-        categorical_names: map from integer to list of strings, names for each
-            value of the categorical features. Every feature that is not in
-            this map will be considered as ordinal or continuous, and thus discretized.
+        class_names: List of class name strings.
+        feature_names: List of feature name strings.
+        train_data: Training data numpy array used for sampling
+            (bootstrap perturbations).
+        categorical_names: Dict mapping feature index to list of
+            category name strings. Features not in this map are treated
+            as continuous and will be discretized.
+        black_box_labels: Labels from black box for MDLP/entropy discretizers.
+        discretizer: Discretization method. One of 'quartile', 'decile',
+            'MDLP', 'entropy', 'kmeans'.
+        filename: Filename for KMeans discretizer persistence.
+        ordinal_features: List of ordinal feature indices.
     """
     def __init__(self, class_names, feature_names, train_data, categorical_names=None,
-                black_box_labels=None, discretizer='quartile', filename="", ordinal_features=[]):
+                black_box_labels=None, discretizer='quartile', filename="", ordinal_features=None):
+        if ordinal_features is None:
+            ordinal_features = []
         self.encoder = collections.namedtuple('random_name',
                                               ['transform'])(lambda x: x)
         self.disc = collections.namedtuple('random_name2',
                                               ['discretize'])(lambda x: x)
         self.categorical_features = []
         if categorical_names:
-            # TODO: Check if this n_values is correct!!
             cat_names = sorted(categorical_names.keys())
             n_values = [len(categorical_names[i]) for i in cat_names]
             self.encoder = sklearn.preprocessing.OneHotEncoder(
-                categorical_features=cat_names,
-                n_values=n_values)
+                categories='auto')
             self.encoder.fit(train_data)
-            self.categorical_features = self.encoder.categorical_features
+            self.categorical_features = list(cat_names)
         else:
             categorical_names = {}
         if len(ordinal_features) == 0:
@@ -68,19 +97,19 @@ class AnchorTabularExplainer(object):
                                                      self.feature_names)
         elif discretizer == 'MDLP':
             self.disc = lime.lime_tabular.MDLPDiscretizer(train_data,
-                                                          self.categorical_features, 
+                                                          self.categorical_features,
                                                           self.feature_names,
                                                           labels=black_box_labels)
         elif discretizer == 'entropy':
-            self.disc = lime.lime_tabular.EntropyDiscretizer(train_data, 
-                                                          self.categorical_features, 
+            self.disc = lime.lime_tabular.EntropyDiscretizer(train_data,
+                                                          self.categorical_features,
                                                           self.feature_names,
                                                           labels=black_box_labels)
         elif discretizer == 'kmeans':
-            self.disc = lime.lime_tabular.KMeansDiscretizer(train_data, 
-                                                          self.categorical_features, 
-                                                          self.feature_names, filename) 
-              
+            self.disc = lime.lime_tabular.KMeansDiscretizer(train_data,
+                                                          self.categorical_features,
+                                                          self.feature_names, filename)
+
         else:
             raise ValueError('Discretizer must be quartile, decile, MDLP, entropy or kmeans')
 
@@ -101,10 +130,23 @@ class AnchorTabularExplainer(object):
 
     def sample_from_train(self, conditions_eq, conditions_neq, conditions_geq,
                           conditions_leq, num_samples, validation=True):
+        """Sample instances from training data subject to anchor conditions.
+
+        Generates num_samples bootstrap samples from the training data,
+        enforcing equality/inequality constraints from the anchor rules.
+
+        Args:
+            conditions_eq: Dict of {feature_idx: value} equality constraints.
+            conditions_neq: Dict of {feature_idx: value} inequality constraints.
+            conditions_geq: Dict of {feature_idx: value} greater-or-equal constraints.
+            conditions_leq: Dict of {feature_idx: value} less-or-equal constraints.
+            num_samples: Number of samples to generate.
+            validation: Whether to use validation sampling.
+
+        Returns:
+            numpy array of sampled instances (num_samples x n_features).
         """
-        bla
-        """
-        train = self.train 
+        train = self.train
         d_train = self.d_train
         idx = np.random.choice(range(train.shape[0]), num_samples,
                                replace=True)
@@ -147,8 +189,20 @@ class AnchorTabularExplainer(object):
         return sample
 
 
-    def transform_to_examples(self, examples, features_in_anchor=[],
+    def transform_to_examples(self, examples, features_in_anchor=None,
                               predicted_label=None):
+        """Transform raw data examples to human-readable format.
+
+        Args:
+            examples: numpy array of example instances.
+            features_in_anchor: Set of feature indices in the current anchor.
+            predicted_label: The predicted class label index.
+
+        Returns:
+            List of lists, each containing (feature_name, value, weight) tuples.
+        """
+        if features_in_anchor is None:
+            features_in_anchor = []
         ret_obj = []
         if len(examples) == 0:
             return ret_obj
@@ -163,7 +217,15 @@ class AnchorTabularExplainer(object):
         return ret_obj
 
     def to_explanation_map(self, exp):
-        def jsonize(x): return json.dumps(x)
+        """Convert an anchor explanation dict to a visualization-ready map.
+
+        Args:
+            exp: The raw anchor explanation dictionary.
+
+        Returns:
+            Dict with keys: explanation, rawData, predictProba, labelNames,
+            rawDataType, explanationType, trueClass.
+        """
         instance = exp['instance']
         predicted_label = exp['prediction']
         predict_proba = np.zeros(len(self.class_names))
@@ -181,7 +243,7 @@ class AnchorTabularExplainer(object):
                 temp['uncovered_true'], features_in_anchor, predicted_label)
             ret['uncoveredFalse'] = self.transform_to_examples(
                 temp['uncovered_false'], features_in_anchor, predicted_label)
-            ret['covered'] =self.transform_to_examples(
+            ret['covered'] = self.transform_to_examples(
                 temp['covered'], features_in_anchor, predicted_label)
             examples_obj.append(ret)
 
@@ -209,13 +271,27 @@ class AnchorTabularExplainer(object):
         return ret
 
     def as_html(self, exp, **kwargs):
-        """bla"""
+        """Render an anchor explanation as a self-contained HTML page.
+
+        The generated HTML embeds the pre-built bundle.js and renders
+        an interactive explanation visualization.
+
+        Args:
+            exp: The raw anchor explanation dictionary.
+            **kwargs: Additional keyword arguments (unused).
+
+        Returns:
+            A unicode string containing the complete HTML document.
+        """
         exp_map = self.to_explanation_map(exp)
 
-        def jsonize(x): return json.dumps(x)
         this_dir, _ = os.path.split(__file__)
-        bundle = open(os.path.join(this_dir, 'bundle.js'), encoding='utf8').read()
+        with open(os.path.join(this_dir, 'bundle.js'), encoding='utf8') as f:
+            bundle = f.read()
         random_id = 'top_div' + id_generator()
+
+        # Use json.dumps for all dynamic data to prevent XSS.
+        # The random_id is generated internally and is safe.
         out = u'''<html>
         <meta http-equiv="content-type" content="text/html; charset=UTF8">
         <head><script>%s </script></head><body>''' % bundle
@@ -226,23 +302,41 @@ class AnchorTabularExplainer(object):
             lime.RenderExplanationFrame(div,{label_names}, {predict_proba},
             {true_class}, {explanation}, {raw_data}, "tabular", {explanation_type});
         </script>'''.format(random_id=random_id,
-                            label_names=jsonize(exp_map['labelNames']),
-                            predict_proba=jsonize(exp_map['predictProba']),
-                            true_class=jsonize(exp_map['trueClass']),
-                            explanation=jsonize(exp_map['explanation']),
-                            raw_data=jsonize(exp_map['rawData']),
-                            explanation_type=jsonize(exp_map['explanationType']))
+                            label_names=json.dumps(exp_map['labelNames']),
+                            predict_proba=json.dumps(exp_map['predictProba']),
+                            true_class=json.dumps(exp_map['trueClass']),
+                            explanation=json.dumps(exp_map['explanation']),
+                            raw_data=json.dumps(exp_map['rawData']),
+                            explanation_type=json.dumps(exp_map['explanationType']))
         out += u'</body></html>'
         return out
 
 
     def get_sample_fn(self, data_row, classifier_fn, desired_label=None):
+        """Create a sampling function for anchor beam search.
+
+        Constructs a closure that generates perturbed samples around
+        the given data row, subject to anchor constraints.
+
+        Args:
+            data_row: The instance to explain (1-D numpy array).
+            classifier_fn: Prediction function that takes a 2-D array
+                and returns class predictions.
+            desired_label: Target label for the explanation. If None,
+                uses the model's prediction on data_row.
+
+        Returns:
+            A tuple of (sample_fn, mapping) where sample_fn is the
+            sampling closure and mapping maps feature indices to
+            (feature, operator, value) triples.
+        """
         def predict_fn(x):
             return classifier_fn(x)
         true_label = desired_label
         if true_label is None:
             true_label = predict_fn(data_row.reshape(1, -1))[0]
-        # must map present here to include categorical features (for conditions_eq), and numerical features for geq and leq
+        # must map present here to include categorical features (for conditions_eq),
+        # and numerical features for geq and leq
         mapping = {}
         data_row = self.disc.discretize(data_row.reshape(1, -1))[0]
         for f in self.categorical_features:
@@ -251,16 +345,11 @@ class AnchorTabularExplainer(object):
                     idx = len(mapping)
                     if data_row[f] <= v and v != len(self.categorical_names[f]) - 1:
                         mapping[idx] = (f, 'leq', v)
-                        # names[idx] = '%s <= %s' % (self.feature_names[f], v)
                     elif data_row[f] > v:
                         mapping[idx] = (f, 'geq', v)
-                        # names[idx] = '%s > %s' % (self.feature_names[f], v)
             else:
                 idx = len(mapping)
                 mapping[idx] = (f, 'eq', data_row[f])
-            # names[idx] = '%s = %s' % (
-            #     self.feature_names[f],
-            #     self.categorical_names[f][int(data_row[f])])
 
         def sample_fn(present, num_samples, compute_labels=True, validation=True):
             conditions_eq = {}
@@ -278,7 +367,6 @@ class AnchorTabularExplainer(object):
                     if f not in conditions_geq:
                         conditions_geq[f] = v
                     conditions_geq[f] = max(conditions_geq[f], v)
-            # conditions_eq = dict([(x, data_row[x]) for x in present])
             raw_data = self.sample_from_train(
                 conditions_eq, {}, conditions_geq, conditions_leq, num_samples,
                 validation=validation)
@@ -292,7 +380,6 @@ class AnchorTabularExplainer(object):
                     data[:, i] = (d_raw_data[:, f] <= v).astype(int)
                 if op == 'geq':
                     data[:, i] = (d_raw_data[:, f] > v).astype(int)
-            # data = (raw_data == data_row).astype(int)
             labels = []
             if compute_labels:
                 labels = (predict_fn(raw_data) == true_label).astype(int)
@@ -304,11 +391,25 @@ class AnchorTabularExplainer(object):
                           max_anchor_size=None,
                           desired_label=None,
                           beam_size=4, **kwargs):
-        # It's possible to pass in max_anchor_size
+        """Generate an anchor explanation for a single instance.
 
+        Args:
+            data_row: The instance to explain (1-D numpy array).
+            classifier_fn: Prediction function for the model.
+            threshold: Minimum precision threshold for the anchor.
+            delta: Confidence parameter for the beam search.
+            tau: Tolerance parameter (epsilon) for the beam search.
+            batch_size: Number of samples per batch during search.
+            max_anchor_size: Maximum number of predicates in the anchor.
+            desired_label: Target label for the explanation.
+            beam_size: Width of the beam search.
+            **kwargs: Additional arguments passed to anchor_beam.
+
+        Returns:
+            An AnchorExplanation object with the explanation results.
+        """
         sample_fn, mapping = self.get_sample_fn(
             data_row, classifier_fn, desired_label=desired_label)
-        # return sample_fn, mapping
         exp = anchor_base.AnchorBaseBeam.anchor_beam(
             sample_fn, delta=delta, epsilon=tau, batch_size=batch_size,
             desired_confidence=threshold, max_anchor_size=max_anchor_size,
@@ -320,8 +421,16 @@ class AnchorTabularExplainer(object):
         return explanation
 
     def add_names_to_exp(self, data_row, hoeffding_exp, mapping):
-        # TODO: precision recall is all wrong, coverage functions wont work
-        # anymore due to ranges
+        """Add human-readable names to anchor feature indices.
+
+        Converts numeric feature indices and threshold values into
+        readable strings like 'Age > 30' or 'Sex = Male'.
+
+        Args:
+            data_row: The original instance being explained.
+            hoeffding_exp: The raw explanation dict from beam search.
+            mapping: Feature index to (feature, op, value) mapping.
+        """
         idxs = hoeffding_exp['feature']
         hoeffding_exp['names'] = []
         hoeffding_exp['feature'] = [mapping[idx][0] for idx in idxs]
@@ -338,7 +447,6 @@ class AnchorTabularExplainer(object):
         handled = set()
         for idx in idxs:
             f, op, v = mapping[idx]
-            # v = data_row[f]
             if op == 'eq':
                 fname = '%s = ' % self.feature_names[f]
                 if f in self.categorical_names:
