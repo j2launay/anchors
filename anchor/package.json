@@ -47,8 +47,8 @@
     "d3-scale": "^1.0.4",
     "lodash": "^4.11.2",
     "rangeslider": "^1.0.0",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-rangeslider": "^1.1.0"
   },
   "eslintConfig": {
