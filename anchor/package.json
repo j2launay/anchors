@@ -40,7 +40,7 @@
     "webpack-dev-server": "~3.1.11"
   },
   "dependencies": {
-    "antd": "^2.6.0",
+    "antd": "^6.5.2",
     "babel-preset-react": "^6.11.1",
     "classnames": "^2.2.5",
     "d3": "^3.5.17",
