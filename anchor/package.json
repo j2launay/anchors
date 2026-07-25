@@ -36,7 +36,7 @@
     "node-libs-browser": "^0.5.3",
     "style-loader": "^0.13.1",
     "webpack": "^5.109.0",
-    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-bundle-analyzer": "^5.3.1",
     "webpack-dev-server": "~5.2.6"
   },
   "dependencies": {
